@@ -9,3 +9,29 @@ Tienen que tener instalado NodeJS y npm o yarn, el que más les guste.
 
 (Optional, en vez de usar "node server.js" instalen nodemon (npm install -d nodemon) y así arrancan el servidor "nodemon server.js".
 La ventaja es que no tienen que reiniciar el servidor cada que hagan un cambio, con nodemon cada que guarden un archivo se reinicia automaticamente el servidor)
+
+# Consumo de las API
+## EPS
+Las EPS que estén registradas deben tener su nombre de usuario y una contraseña
+que se les da de forma 'manual' por parte de HCE-Core
+### Lista de servicios:
+##### Signature : Este servicio sirve para obtener los tokens que deben incluir en el encabezado de los demás requests
+Nota: los tokens expiran y tienen una duración de 2 horas. al expirar se debe repetir este proceso.
+###### Request Model:
+URL = http://ip-server:5000/eps/sign
+METHOD = POST
+HEADERS = {'Content-Type' : 'application/json'}
+BODY(JSON) = {"id":"nombreUsuarioEPS", "password":"passwordDeLaEPS"}
+###### Response Model (SUCCESS):
+STATUS = 200 (OK en HTTP)
+BODY(JSON) = {"status":"OK", "message":"Successful signing", "token":"tokenGenerado"}
+###### Response Model (FAILED):
+STATUS = 401 (UNAUTHORIZED en HTTP)
+BODY(JSON) = {"status":"DECLINED", "message":"Invalid identification values"}
+##### Crear un nuevo usuario (Paciente): Crea un nuevo sujeto que va a tener historia clinica
+NOTA: Primero deben haber obtenido el token con el servicio de Signature
+###### Request Model:
+URL = http://ip-server:5000/eps/createUser
+METHOD = POST
+HEADERS = {'Content-Type' : 'application/json', 'Authorization' : token}
+BODY(JSON) = {"DNI": int, "nombre":string, "fechaNacimiento":string("YYYY-mm-dd"), "estadoCivil":int(1="soltero", 2="casado"), "telefono":int, "sexo":int(1="masculino", 2="femenino", 3="otro")}

@@ -1,6 +1,7 @@
 //Ver comentarios server.js para obtener más info
 const express = require('express');
 const app = express();
+const auth = require('../modules/authentication/authentication');
 //Creación de endpoints
 //app.get Siginifica que escuchara las peticiones de tipo GET que vayan al path
 //Que se le esta pasando como primer argumento.
@@ -19,5 +20,18 @@ app.get('/users/index', function(req, res){
     }
   };
   res.send(response);
+});
+//Endpoint en el cual un usuario obtiene su token para ver sus datos
+app.post('/users/sign', (req, res)=>{
+  let reqBody = req.body;
+  let id = reqBody.id;
+  let password = reqBody.password;
+  auth.signRequest('USER', id, password).then((resp)=>{
+    res.status(200);
+    res.send(resp);
+  }).catch((err)=>{
+    res.status(401);
+    res.send(err);
+  });
 });
 module.exports = app;

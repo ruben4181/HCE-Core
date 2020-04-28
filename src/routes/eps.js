@@ -68,4 +68,16 @@ app.post('/eps/sign', (req, res)=>{
   })
 });
 
+app.post('/eps/getPaciente', (req, res)=>{
+  let reqBody = req.body;
+  let DNI = reqBody.DNI;
+  dbServices.getPacienteByDNI(DNI).then((result)=>{
+    res.status(200);
+    res.send(result);
+  }).catch((err)=>{
+    res.status(500);
+    res.send(err);
+  })
+});
+
 module.exports = app;

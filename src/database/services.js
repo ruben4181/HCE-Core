@@ -10,10 +10,9 @@ module.exports = {
           if(err){
             console.log('Error mientras se guardaba un nuevo usuario');
             //Cuando ha ocurrido un error, lo 'lanzamos'
-            //Y la tarea asincrona termine 
+            //Y la tarea asincrona termine
             reject(err);
           } else{
-            console.log('Transacción exitosa');
             let response = result[0][0];
             if(response['EL PACIENTE YA EXISTE']==undefined){
               response = {
@@ -31,6 +30,29 @@ module.exports = {
             resolve(response);
           }
         });
+    });
+  },
+  getPacienteByDNI : function(DNI){
+    return new Promise((resolve, reject)=>{
+      let queryString = "call getPacienteForDNI(?)";
+      let query = connection.query(queryString, [DNI], (err, result)=>{
+        if(err){
+          reject(err);
+        } else{
+          queryStatus = result[0][0];
+          if(queryStatus['EXISTE']!=undefined){
+              resolve({
+                status : 'OK',
+                data : result[1]
+              });
+          }
+          resolve({
+            status : 'ERROR',
+            message : 'Usuario no existe'
+          });
+        }
+      });
+
     });
   },
   closeConnection : function(){

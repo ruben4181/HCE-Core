@@ -1,10 +1,9 @@
 const auth = require('./authentication');
-
+const config = require('./config');
 module.exports = {
   verifyToken : (req, res, next)=>{
-    console.log(req.path);
     const token = req.headers['authorization'];
-    if(req.path=='/eps/sign' || req.path=='/users/sign'){
+    if(config.exceptions.indexOf(req.path+":"+req.method) > -1){
       return next();
     }
     if(token==undefined){
@@ -14,7 +13,7 @@ module.exports = {
         message : 'Sin token de autorización'
       });
     } else{
-      auth.authRequest(token, req.path).then((resp)=>{
+      auth.authRequest(token, req.path+":"+req.method).then((resp)=>{
         if(resp.status=='OK'){
           next();
         } else{

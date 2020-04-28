@@ -2,6 +2,7 @@
 const express = require('express');
 const app = express();
 const dbServices = require('../database/services');
+const auth = require('../modules/authentication/authentication');
 
 app.get('/eps/index', function(req, res){
   //req = a la información de la petición que llega.
@@ -51,6 +52,20 @@ app.post('/eps/createUser', (req, res)=>{
         message : 'Ha ocurrido un error en el servidor, intente de nuevo mas tarde'
       });
     });
+});
+
+app.post('/eps/sign', (req, res)=>{
+  let body = req.body;
+  let id = body.id;
+  let password = body.password;
+
+  auth.signRequest('EPS', id, password).then((resp)=>{
+    res.status(200);
+    res.send(resp);
+  }).catch((err)=>{
+    res.status(401);
+    res.send(err);
+  })
 });
 
 module.exports = app;

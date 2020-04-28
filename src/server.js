@@ -24,11 +24,17 @@ app.use(cors({origin:true,credentials:true}));
 app.use(bodyParser.urlencoded({ extended: false }));
 //Así 'parsea' cuando viene codificado en formato JSON
 app.use(bodyParser.json());
+const middleware = require('./modules/authentication/middleware');
+app.use(middleware.verifyToken);
 //La siguiente linea require los endpoints, sus verbos y su logica de otro Archivo
 //Esto es para llevar orden, porque todo se podría configurar desde aquí pero no es recomendable
 app.use(require('./routes/index.js'));
 //Puerto en el que va a escuchar el servidor, debe ser un numero guardado en las
 //Variables de entorno o por defecto el 3001
+const protectedRoutes = express.Router();
+
+
+
 let port = process.env.PORT || 3001;
 server.listen(port, ()=>{
   console.log('Servidor iniciado correctamente\nEscuchando en el puerto', port);

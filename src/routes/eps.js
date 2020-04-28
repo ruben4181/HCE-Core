@@ -38,9 +38,22 @@ app.post('/eps/createUser', (req, res)=>{
   let nombre = reqBody.nombre;
   let fechaNacimiento = reqBody.fechaNacimiento;
   let estadoCivil = reqBody.estadoCivil;
+  if(estadoCivil==1){
+    estadoCivil="soltero"
+  } else{
+    estadoCivil="casado"
+  }
   let telefono = reqBody.telefono;
   let sexo = reqBody.sexo;
-
+  if(sexo==1){
+    sexo="masculino"
+  } else{
+    if(sexo==2){
+      sexo="femenino"
+    } else{
+      sexo="otro"
+    }
+  }
   dbServices.createUser(DNI, nombre, fechaNacimiento,
     estadoCivil, telefono, sexo).then((response)=>{
       res.status(200);

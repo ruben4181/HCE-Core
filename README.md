@@ -43,3 +43,15 @@ METHOD = POST
 HEADERS = {'Content-Type' : 'application/json', 'Authorization' : token}
 
 BODY(JSON) = {"DNI": int, "nombre":string, "fechaNacimiento":string("YYYY-mm-dd"), "estadoCivil":int(1="soltero", 2="casado"), "telefono":int, "sexo":int(1="masculino", 2="femenino", 3="otro")}
+###### Response Model (SUCCESS):
+STATUS = 200
+
+BODY(JSON) = {"status" : "APPROVED", "message" : "¡Paciente creado con exito!" }
+###### Response Model (USER EXISTS):
+STATUS = 200
+
+BODY(JSON) = {"status" : "DECLINED", "message" : "Lo sentimos, ese paciente ya figura en la base de datos"}
+###### Response Model (BAD_REQUEST): Cuando los datos del body del request son erroneos
+STATUS = 500
+
+BODY(JSON) = {"status" : "ERROR", "message" : "Ha ocurrido un error en el servidor, intente de nuevo"}

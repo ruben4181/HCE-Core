@@ -6,7 +6,7 @@ const JWT_EXPIRATION_TIME = 7200
 validateEPS = function(id, password){
   return new Promise((resolve, reject)=>{
     let response = false;
-    if(id=='AsmetSalud'){
+    if(id==1){
       response = true;
     }
     resolve(response);
@@ -90,7 +90,7 @@ module.exports = {
           reject(response);
         } else{
           if(checkEPAccess(decoded.entityType, endpoint)){
-            response = {status : 'OK', message : 'Valid authorization'}
+            response = {status : 'OK', message : 'Valid authorization', decoded : decoded}
           } else{
             response.message = "Permiso denegado para consumir esa función";
           }

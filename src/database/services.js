@@ -132,26 +132,54 @@ module.exports = {
         });
       });
   },
+  updateFisiologica : function(DNI, lactancia, iniciacionSexual, ginecoObstretico,
+    menarca, embarazos, partos, abortos, DNIMedico){
+    return new Promise(function(resolve, reject) {
+      let response = {status : "ERROR", message : "Un error ocurrio al actualizar"};
+      let queryString = "call updateFisiologica(?, ?, ?, ?, ?, ?, ?, ?)";
+      let query = connection.query(queryString, [DNI, lactancia, iniciacionSexual,
+        ginecoObstretico, menarca, embarazos, partos, abortos], (err, result)=>{
+          if(err){
+            reject(err);
+          } else{
+            let queryStatus = result[0][0]['LA FISIOLOGICA HA SIDO ACTUALIZADA'];
+            if(queryStatus!=undefined){
+              response = {status : 'OK', message : 'Datos actualizados'}
+            } else{
+              response = { status : 'DECLINED', message :'Un error ha ocurrido'};
+            }
+            resolve(response);
+          }
+        });
+
+    });
+
+  },
+  updateAntecedentes : function(DNI, accidentes, antecedentesHereditarios,
+    enfermedadesInfancia, intervencionesQuirurgicas, alergias, inmunizacion, DNIMedico){
+      return new Promise((resolve, reject)=>{
+        let queryString = "call updateAntecedentes(?, ?, ?, ?, ?, ?, ?)";
+        let query = connection.query(queryString, [DNI, accidentes, antecedentesHereditarios,
+          enfermedadesInfancia, intervencionesQuirurgicas, alergias,
+        inmunizacion], (err, result)=>{
+          let response = {status : 'ERROR', message : 'Ocurrio un error al actualizar'};
+          if(err){
+            response['err']=err;
+            reject(response);
+          } else{
+            let queryStatus = result[0][0]['EL ANTECEDENTE HA SIDO ACTUALIZADO'];
+            if(queryStatus!=undefined){
+              response = {status : 'OK', message : 'Datos actualizados'}
+            } else{
+              response = {status: 'DECLINED', message : 'Antecedentes no existen'};
+            }
+            resolve(response);
+          }
+        });
+      });
+    }
+  ,
   closeConnection : function(){
     return connection.end();
   }
-}/*
-module.exports.createHC(123, 1, 123, 123).then((resp)=>{
-  console.log(resp);
-}).catch((err)=>{
-  console.log(err);
-});
-
-module.exports.createAntecedentes(123, 'NINGUNO', 'NINGUNO', 'Sarampion',
-'Apendicitis', 'Acetaminofen', 'NINGUNA').then((result)=>{
-  console.log(result);
-}).catch((err)=>{
-  console.log(result);
-});
-module.exports.createFisiologica(123, 'NO', '19 años', 'NO',
-  'Normal', '2', '0', '2').then((result)=>{
-    console.log(result);
-  }).catch((err)=>{
-    console.log(err);
-  });
-//*/
+}

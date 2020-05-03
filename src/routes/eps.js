@@ -144,4 +144,40 @@ app.post('/eps/createHC', (req, res)=>{
   })
 });
 
+app.post('/eps/update/fisiologica', (req, res)=>{
+  let reqBody = req.body;
+  let f = reqBody.fisiologica;
+  let DNI = reqBody.DNI;
+  let DNIMedico = reqBody.DNIMedico;
+  dbServices.updateFisiologica(DNI, f.lactancia, f.iniciacionSexual,
+    f.ginecoObstretico, f.menarca, f.embarazos, f.partos, f.abortos, DNIMedico).then((resp)=>{
+      if(resp.status=='OK'){
+        res.status(500);
+      }
+      res.send(resp);
+  }).catch((err)=>{
+    res.status(500);
+    res.send(err);
+  });
+});
+
+app.post('/eps/update/antecedentes', (req, res)=>{
+  let reqBody = req.body;
+  let a = reqBody.antecedentes;
+  let DNI = reqBody.DNI;
+  let DNIMedico = reqBody.DNIMedico;
+
+  dbServices.updateAntecedentes(DNI, a.accidentes, a.antecedentesHereditarios,
+      a.enfermedadesInfancia, a.intervencionesQuirurgicas, a.alergias,
+      a.inmunizacion, DNIMedico).then((resp)=>{
+      if(resp.status=='OK'){
+        res.status(200);
+      }
+      res.send(resp);
+    }).catch((err)=>{
+      res.status(500);
+      res.send(err);
+    });
+});
+
 module.exports = app;

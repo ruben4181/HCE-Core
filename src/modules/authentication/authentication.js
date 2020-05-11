@@ -20,11 +20,12 @@ validateEPS = function(id, password){
 validateUser = function(id, password){
   return new Promise((resolve, reject)=>{
     dbServices.getPacienteByDNI(id).then((resp)=>{
-      
-      if(resp.data){
+      if(resp.status=='OK'){
         if(resp.data.Token==password){
           return resolve(true)
         }
+        return resolve(false);
+      } else{
         return resolve(false);
       }
     }).catch((err)=>{

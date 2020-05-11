@@ -1,36 +1,58 @@
 const jwt = require('jsonwebtoken');
 const config = require('./config.js');
+const dbServices = require("../../database/services");
 
 const JWT_EXPIRATION_TIME = 7200
 
 validateEPS = function(id, password){
   return new Promise((resolve, reject)=>{
-    let response = false;
-    if(id==1){
-      response = true;
-    }
-    resolve(response);
-  })
+    dbServices.getEntidadByID(id).then((resp)=>{
+      if(resp.token==password){
+        return resolve(true);
+      }
+      return resolve(false);
+    }).catch((err)=>{
+      resolve(false);
+    });
+  });
 }
 
 validateUser = function(id, password){
   return new Promise((resolve, reject)=>{
-    let response = false;
-    if(id=='1061543081'){
-      response=true;
-    }
-    resolve(response);
-  })
+    dbServices.getPacienteByDNI(id).then((resp)=>{
+      
+      if(resp.data){
+        if(resp.data.Token==password){
+          return resolve(true)
+        }
+        return resolve(false);
+      }
+    }).catch((err)=>{
+      return resolve(false);
+    })
+  });
 
 }
 
-checkEPAccess = function(entityType, endpoint){
-  if(entityType=='EPS'){
+checkEP = function(){
+  dbServices.getEntidadByID(1).then((resp)=>{
+    console.log("Resultado: ");
+    console.log(resp);
+  }).catch((err)=>{
+    console.log("Error: ");
+    console.log(err);
+  });
+}
+
+checkEP();
+
+checkEPAccess = function(entityType, endpoint, user, id){
+  if(entityType=='EPS' && user==id){
     if(config.epsEP.indexOf(endpoint) > -1){
       return true;
     }
   }
-  if(entityType=='USER'){
+  if(entityType=='USER' && user.toString()==id.toString()){
     if(config.userEP.indexOf(endpoint) > -1){
       return true;
     }
@@ -44,7 +66,7 @@ module.exports = {
       if(entityType=='EPS'){
         validateEPS(id, password).then((resp)=>{
           if(resp){
-            const payload = { entityType : 'EPS', check : true, id : id};
+            const payload = { entityType : 'EPS', check : true, id : Number(id)};
             const token = jwt.sign(payload, config.masterKey,{
               expiresIn : JWT_EXPIRATION_TIME
             });
@@ -63,7 +85,7 @@ module.exports = {
         validateUser(id, password).then((resp)=>{
           if(resp){
             const payload = {
-              entityType : 'USER', check : true, id : id};
+              entityType : 'USER', check : true, id : Number(id)};
             const token = jwt.sign(payload, config.masterKey, {
               expiresIn : JWT_EXPIRATION_TIME
             });
@@ -80,7 +102,7 @@ module.exports = {
       }
     });
   },
-  authRequest : function(token, endpoint){
+  authRequest : function(token, endpoint, user){
     return new Promise((resolve, reject)=>{
       response = {status : 'DECLINED', message : 'Invalid Token'}
       jwt.verify(token, config.masterKey, (err, decoded)=>{
@@ -89,25 +111,15 @@ module.exports = {
           response.message=err.name;
           reject(response);
         } else{
-          if(checkEPAccess(decoded.entityType, endpoint)){
+
+          if(checkEPAccess(decoded.entityType, endpoint, user, decoded.id)){
             response = {status : 'OK', message : 'Valid authorization', decoded : decoded}
           } else{
             response.message = "Permiso denegado para consumir esa función";
           }
-          resolve(response);
+          return resolve(response);
         }
       });
     });
   }
 }
-
-testToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbnRpdHlUeXBlIjoiVVNFUiIsImNoZWNrIjp0cnVlLCJpZCI6IjEwNjE1NDMwODEiLCJpYXQiOjE1ODgwMzI2NDgsImV4cCI6MTU4ODAzOTg0OH0.ZSOvt4AP02sCVCm3Devwgqk2oh0xwYdy5Fn8CU1Bytk'
-/*module.exports.authRequest(testToken, 'createUser').then((resp)=>{
-  console.log(resp);
-});
-/*module.exports.signRequest('USER', '1061543081', 'PWD').then((resp)=>{
-  console.log(resp);
-}).catch((err)=>{
-  console.log(err);
-})
-//*/

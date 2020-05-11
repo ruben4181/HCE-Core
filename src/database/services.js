@@ -8,7 +8,6 @@ module.exports = {
       let queryString = "call insertPaciente(?, ?, ?, ?, ?, ?, ?)";
       let query = connection.query(queryString, [DNI, nombre, fechaNacimiento, estadoCivil, telefono, sexo, 'TOKEN'], function(err, result){
           if(err){
-            console.log('Error mientras se guardaba un nuevo usuario');
             //Cuando ha ocurrido un error, lo 'lanzamos'
             //Y la tarea asincrona termine
             reject(err);
@@ -16,7 +15,7 @@ module.exports = {
             let response = result[0][0];
             if(response['EL PACIENTE YA EXISTE']==undefined){
               response = {
-                status : 'APPROVED',
+                status : 'OK',
                 message : '¡Paciente creado con exito!'
               }
             } else{
@@ -40,7 +39,6 @@ module.exports = {
           reject(err);
         } else{
           queryStatus = result[0][0];
-          console.log();
           if(queryStatus['NO EXISTE EL PACIENTE']==undefined){
               resolve({
                 status : 'OK',
@@ -109,9 +107,9 @@ module.exports = {
         this.getPacienteByDNI(DNI).then((result)=>{
           if(result.status=='OK'){
             let ID = result.data['Id Paciente'];
-            let queryString = "call insertHC(?, ?, ?, ?, ?)";
-            let query = connection.query(queryString, [DNI, idEntidad, idAntecedente,
-              idFisiologica, ID], (err, result)=>{
+            let queryString = "call insertHC(?, ?, ?, ?)";
+            let query = connection.query(queryString, [idEntidad, DNI, idAntecedente,
+              idFisiologica], (err, result)=>{
                 if(err){
                   reject(err);
                 } else{
@@ -177,8 +175,70 @@ module.exports = {
           }
         });
       });
-    }
-  ,
+  },
+  getEntidadByID: function(ID){
+    return new Promise((resolve, reject)=>{
+      let queryString = "SELECT * FROM Entidad WHERE idEntidad=?"
+      let query = connection.query(queryString, [ID], (err, result)=>{
+        if(err){
+          reject(err);
+        } else{
+          resolve(result[0])
+        }
+      });
+    });
+  },
+  getHCForDNI : function(DNI){
+    let antecedentes = undefined;
+    let fisiologica = undefined;
+    return new Promise((resolve, reject)=>{
+      let queryString = "call getHCForIdPaciente(?)";
+      let query=connection.query(queryString, [DNI], (err, result)=>{
+        if(err){
+          reject(err)
+        } else{
+          let response = {status : 'DECLINED', message : 'Historia clinica no existe'};
+          let queryStatus=result[0][0];
+          if(queryStatus['NO EXISTE UNA HISTORIA CLINICA ASOCIADA CON ESE ID']==undefined){
+              queryString = "call getAntecedenteForId(?)";
+              let idAntecedente = queryStatus['Id Antecedente'];
+              let idFisiologica = queryStatus['Id Fisiologica'];
+              let query = connection.query(queryString, [idAntecedente], (err, result)=>{
+                if(err){
+                  reject(err);
+                } else{
+                  queryStatus = result[0][0];
+                  response = {status : 'DECLINED', message : 'Antecedentes no existen'};
+                  if(queryStatus['NO EXISTE EL ANTECEDENTE']==undefined){
+                    antecedentes = queryStatus;
+                    let queryString = "call getFisiologicaForId(?)";
+                    let query = connection.query(queryString, [idFisiologica], (err, result)=>{
+                      if(err){
+                        reject(err);
+                      } else{
+                        response = {status : 'DECLINED', message : 'Fisiologica no existe'};
+                        queryStatus = result[0][0];
+                        if(queryStatus['NO EXISTE LA FISIOLOGICA']==undefined){
+                          fisiologica = queryStatus;
+                          response = {status : 'OK', data : {antecedentes, fisiologica}};
+
+                        }
+                        resolve(response);
+                      }
+                    })
+                  } else {
+                    resolve(response);
+                  }
+                }
+              })
+          } else{
+            resolve(response);
+          }
+        }
+      });
+    });
+
+  },
   closeConnection : function(){
     return connection.end();
   }

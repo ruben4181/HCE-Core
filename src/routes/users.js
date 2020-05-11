@@ -2,6 +2,7 @@
 const express = require('express');
 const app = express();
 const auth = require('../modules/authentication/authentication');
+const dbServices = require('../database/services');
 //Creación de endpoints
 //app.get Siginifica que escuchara las peticiones de tipo GET que vayan al path
 //Que se le esta pasando como primer argumento.
@@ -31,6 +32,27 @@ app.post('/users/sign', (req, res)=>{
     res.send(resp);
   }).catch((err)=>{
     res.status(401);
+    res.send(err);
+  });
+});
+app.post('/users/getPaciente', (req, res)=>{
+  let reqBody = req.body;
+  let DNI = reqBody.DNI;
+  dbServices.getPacienteByDNI(DNI).then((result)=>{
+    res.status(200);
+    res.send(result);
+  }).catch((err)=>{
+    res.status(500);
+    res.send(err);
+  });
+});
+app.post('/users/getHC', (req, res)=>{
+  let reqBody = req.body;
+  let DNI = reqBody.DNI;
+  dbServices.getHCForDNI(DNI).then((resp)=>{
+    res.send(resp);
+  }).catch((err)=>{
+    res.status(500);
     res.send(err);
   });
 });

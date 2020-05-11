@@ -1,5 +1,5 @@
 # HCE-Core
-Backend of HCE-Core project. NodeJS code
+Backend of HCE-Core project. NodeJS code (34.95.198.251)
 
 Tienen que tener instalado NodeJS y npm o yarn, el que más les guste.
 
@@ -18,7 +18,7 @@ que se les da de forma 'manual' por parte de HCE-Core
 ##### Signature : Este servicio sirve para obtener los tokens que deben incluir en el encabezado de los demás requests
 Nota: los tokens expiran y tienen una duración de 2 horas. al expirar se debe repetir este proceso.
 ###### Request Model:
-URL = http://ip-server:5000/eps/sign
+URL = http://34.95.198.251:5000/eps/sign
 
 METHOD = POST
 
@@ -36,7 +36,7 @@ BODY(JSON) = {"status":"DECLINED", "message":"Invalid identification values"}
 ##### Crear un nuevo usuario (Paciente): Crea un nuevo sujeto que va a tener historia clinica
 NOTA: Primero deben haber obtenido el token con el servicio de Signature
 ###### Request Model:
-URL = http://ip-server:5000/eps/createUser
+URL = http://34.95.198.251:5000/eps/createUser
 
 METHOD = POST
 

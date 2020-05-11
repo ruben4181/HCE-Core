@@ -13,7 +13,11 @@ module.exports = {
         message : 'Sin token de autorización'
       });
     } else{
-      auth.authRequest(token, req.path+":"+req.method).then((resp)=>{
+      let id = req.body.DNI;
+      if(req.path.substring(0, 5)=='/eps/'){
+        id = req.body.idEntidad;
+      }
+      auth.authRequest(token, req.path+":"+req.method, id).then((resp)=>{
         if(resp.status=='OK'){
           next();
         } else{

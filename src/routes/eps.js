@@ -96,52 +96,45 @@ app.post('/eps/createHC', (req, res)=>{
   let reqBody = req.body;
   let a = reqBody.antecedentes;
   let f = reqBody.fisiologica;
-  console.log(a);
-  console.log();
   let DNI = reqBody.DNI;
-  let idEntidad = 1;
+  let idEntidad = reqBody.idEntidad;
   let headers = req.headers;
-  auth.authRequest(headers.authorization, '/eps/createHC:POST').then((resp)=>{
-    idEntidad = resp.decoded.id;
-    dbServices.getPacienteByDNI(DNI).then((resp)=>{
-      if(resp.status=='OK'){
-        dbServices.createFisiologica(DNI, f.lactancia, f.iniciacionSexual,
-          f.ginecoObstretico, f.menarca, f.embarazos, f.partos, f.abortos).then((result)=>{
-            if(result.status=='OK'){
-              dbServices.createAntecedentes(DNI, a.accidentes, a.antecedentesHereditarios,
-              a.enfermedadesInfancia, a.intervencionesQuirurgicas, a.alergias,
-              a.inmunizacion).then((result)=>{
-                if(result.status=='OK'){
-                  dbServices.createHC(DNI, idEntidad, DNI, DNI).then((result)=>{
-                    if(result.status=='OK'){
-                      res.status(200);
-                    }
-                    res.send(result);
-                  });
-                }else{
-                  res.status(200);
-                  res.send(result);
-                }
-              }).catch((err)=>{
-                res.status(500);
-                res.send(err);
-              })
-            } else {
-              res.status(500);
-              res.send(result);
-            }
-          }
+  dbServices.getPacienteByDNI(DNI).then((resp)=>{
+    if(resp.status=='OK'){
+      dbServices.createFisiologica(DNI, f.lactancia, f.iniciacionSexual,
+        f.ginecoObstretico, f.menarca, f.embarazos, f.partos, f.abortos).then((result)=>{
+          if(result.status=='OK'){
 
-        ).catch((err)=>{
-          res.status(500);
-          res.send(err);
-        });
-      } else { res.status(500); res.send(resp) }
-    }).catch((err)=>{ res.send(err)} );
-  }).catch((err)=>{
-    res.status(500);
-    res.send(err);
-  })
+            dbServices.createAntecedentes(DNI, a.accidentes, a.antecedentesHereditarios,
+            a.enfermedadesInfancia, a.intervencionesQuirurgicas, a.alergias,
+            a.inmunizacion).then((result)=>{
+              if(result.status=='OK'){
+                dbServices.createHC(DNI, idEntidad, DNI, DNI).then((result)=>{
+                  if(result.status=='OK'){
+                    res.status(200);
+                  }
+                  res.send(result);
+                });
+              }else{
+                res.status(200);
+                res.send(result);
+              }
+            }).catch((err)=>{
+              res.status(500);
+              res.send(err);
+            })
+          } else {
+            res.status(500);
+            res.send(result);
+          }
+        }
+
+      ).catch((err)=>{
+        res.status(500);
+        res.send(err);
+      });
+    } else { res.status(500); res.send(resp) }
+  }).catch((err)=>{ res.send(err)} );
 });
 
 app.post('/eps/update/fisiologica', (req, res)=>{
@@ -178,6 +171,19 @@ app.post('/eps/update/antecedentes', (req, res)=>{
       res.status(500);
       res.send(err);
     });
+});
+
+app.post('/eps/getHC', (req, res)=>{
+  let reqBody = req.body;
+  let DNI = reqBody.DNI;
+  let idEntidad = reqBody.idEntidad;
+
+  dbServices.getHCForDNI(DNI).then((resp)=>{
+    res.send(resp);
+  }).catch((err)=>{
+    res.status(500);
+    res.send(err);
+  });
 });
 
 module.exports = app;

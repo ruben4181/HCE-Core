@@ -5,7 +5,8 @@ module.exports={
     '/eps/getPaciente:POST',
     '/eps/createHC:POST',
     '/eps/update/fisiologica:POST',
-    '/eps/update/antecedentes:POST'],
-  userEP : ['/users/index:GET'],
+    '/eps/update/antecedentes:POST',
+    '/eps/getHC:POST'],
+  userEP : ['/users/index:GET', '/users/getPaciente:POST', '/users/getHC:POST'],
   exceptions : ['/eps/sign:POST', '/users/sign:POST']
 }

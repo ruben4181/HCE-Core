@@ -4,7 +4,7 @@ const mysql = require('mysql');
 var connection;
 
 function handleDisconnect(){
-  var connection = mysql.createConnection({
+  connection = mysql.createConnection({
     host : process.env.DB_HOST,
     user : process.env.DB_USER,
     password : process.env.DB_PASSWORD,
@@ -32,5 +32,5 @@ function handleDisconnect(){
 }
 
 handleDisconnect();
-
+setTimeout(()=>{console.log("Loading server");}, 5000);
 module.exports = connection;

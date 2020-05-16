@@ -36,7 +36,7 @@ DELIMITER //
 CREATE PROCEDURE getPacienteForDNI (IN ID BIGINT) -- Get cliente by DNI
 BEGIN
 	IF (SELECT EXISTS (SELECT DNI FROM Pacientes WHERE DNI = ID)) THEN
-		SELECT DNI "Identificación", nombreCliente "Nombre Paciente", 
+		SELECT DNI "Identificación", nombreCliente "Nombre Paciente",
 				fechaNacimiento ,estadoCivil "Estado Civil", telefono "Telefono", sexo "Sexo", token "Token"
 		FROM Pacientes
 		WHERE DNI = ID;
@@ -70,7 +70,7 @@ CREATE PROCEDURE updatePaciente (IN ID_IN BIGINT, IN ID_CHANGE BIGINT, IN NOMBRE
 BEGIN
 	IF (SELECT EXISTS (SELECT DNI FROM Pacientes WHERE DNI = ID_IN)) THEN
 		START TRANSACTION;
-        UPDATE Pacientes 
+        UPDATE Pacientes
 			SET DNI = ID_CHANGE,
 				nombreCliente = NOMBRE,
 				fechaNacimiento = FECHA,
@@ -166,11 +166,11 @@ CREATE PROCEDURE updateAcudiente (IN ID BIGINT, IN NOMBRE VARCHAR(200), IN FECHA
 BEGIN
 	IF (SELECT EXISTS (SELECT DNI FROM Acudientes WHERE DNI = ID)) THEN
 		START TRANSACTION;
-        UPDATE Acudientes 
-			SET DNI = ID, 
-                nombreAcudiente = NOMBRE, 
-                fechaNacimiento = FECHA, 
-                telefono = TELEFONO, 
+        UPDATE Acudientes
+			SET DNI = ID,
+                nombreAcudiente = NOMBRE,
+                fechaNacimiento = FECHA,
+                telefono = TELEFONO,
                 sexo = SEXO
 		WHERE DNI = ID;
         IF ROW_COUNT() THEN
@@ -316,4 +316,3 @@ CALL insertMedico(651919619,'MORIARTI', '1972-08-30', 6486);
 -- CALL deleteMedico(9491698);
 
 CALL insertPacientesXAcudientes(1144100868,9191);
-

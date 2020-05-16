@@ -221,7 +221,7 @@ CREATE TABLE Pacientes (
 
 -- Table: TipoExamen
 CREATE TABLE TipoExamen (
-    idTipoExamen BIGINT NOT NULL AUTO_INCREMENT,
+    idTipoExamen BIGINT NOT NULL,
     nombreTipo varchar(200) NOT NULL,
     CONSTRAINT TipoExamen_pk PRIMARY KEY (idTipoExamen)
 );

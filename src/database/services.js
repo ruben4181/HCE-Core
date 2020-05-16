@@ -7,7 +7,9 @@ module.exports = {
     return new Promise((resolve, reject)=>{
       let queryString = "call insertPaciente(?, ?, ?, ?, ?, ?, ?)";
       let query = connection.query(queryString, [DNI, nombre, fechaNacimiento, estadoCivil, telefono, sexo, 'TOKEN'], function(err, result){
+          console.log("HERE");
           if(err){
+            console.log("Here");
             //Cuando ha ocurrido un error, lo 'lanzamos'
             //Y la tarea asincrona termine
             reject(err);
@@ -239,7 +241,40 @@ module.exports = {
     });
 
   },
+  addCitaMedica: function(fecha, motivo, eps, medico, examenFisico, habitos,
+    ExamenSegmentario, DNI){
+
+  },
+  //Brayan funcion
+  addExamenFisico : function(id, data){
+    return new Promise((resolve, reject)=>{
+      let queryString = "call insertExamen_Fisico(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      let query = connection.query(queryString, [id, data.estadoConcienca, data.lenguaje, data.auditivo,
+        data.agudezaVisual, data.peso, data.estatura, data.facie, data.edadRealAparente,
+      data.temperatura, data.actitud], (err, result)=>{
+        if(err){
+          reject(err);
+        } else{
+          let queryStatus = result[0][0];
+          if(queryStatus['EL EXAMEN FISICO HA SIDO CREADO CON EXITO']){
+              return resolve({status : 'OK', message : 'Examen fisico creado con exito'});
+          } else {
+            return resolve({status : 'DECLINED', message : 'Examen fisico duplicado'});
+          }
+        }
+      });
+    });
+  },
   closeConnection : function(){
     return connection.end();
   }
 }
+/*
+module.exports.addExamenFisico(11111, {estadoConcienca: "asdsa",
+  lenguaje:"asdas", auditivo:"asdas", agudezaVisual:"asdasd", peso:12.3, estatura:12.9,
+  facie:"asdsad", edadRealAparente: "asdas", temperatura : 12.3, actitud :"asdasd"}).then((resp)=>{
+    console.log(resp);
+  }).catch((err)=>{
+    console.log("Error", err);
+  });
+//*/

@@ -34,5 +34,4 @@ function handleDisconnect(){
 }
 
 handleDisconnect();
-setTimeout(()=>{console.log("Loading server");}, 5000);
 module.exports = connection;

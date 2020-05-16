@@ -62,7 +62,8 @@ app.post('/eps/createUser', (req, res)=>{
       res.status(500);
       res.send({
         status : 'ERROR',
-        message : 'Ha ocurrido un error en el servidor, intente de nuevo mas tarde'
+        message : 'Ha ocurrido un error en el servidor, intente de nuevo mas tarde',
+        err : err
       });
     });
 });

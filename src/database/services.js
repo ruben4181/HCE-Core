@@ -265,6 +265,45 @@ module.exports = {
       });
     });
   },
+  addHabito : function(id, data){
+    return new Promise((resolve, reject)=>{
+      let queryString = "call insertHabito(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      let query = connection.query(queryString, [id, data.alimentacion, data.apetito, data.sed,
+        data.diuresis, data.catarsisIntestinal, data.sueno, data.relacionesSexuales, data.alcohol,
+        data.tabaco, data.drogas, data.medicacion], (err,result)=>{
+        if(err){
+          reject(err);
+        }else{
+          let queryStatus = result [0][0];
+          if(queryStatus['EL HABITO   HA SIDO CREADA CON EXITO']){
+            return resolve({status : 'OK', message :'Habito creado con exito'});
+          }else{
+            return resolve({status : 'DECLINED', message :'Habito duplicado'});
+          }
+        }
+      });
+    });
+  },
+  addExamenSegmetario : function(id, data){
+    return new Promise((resolve, reject)=>{
+      let queryString = "call insertExamenSegmentario(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      let query = connection.query(queryString, [id, data.cabeza, data.cuello, data.torax,
+        data.aparatoCirculatorio, data.aparatoRespiratorio, data.abdomen, data.aparatoUrogenital,
+        data.sistemaNervioso, data.psicologicoMental, data.perine, data.examenGenital,
+        data.miembrosSuperiores, data.miembrosInferiores], (err,result)=>{
+        if(err){
+          reject(err);
+        }else{
+          let queryStatus = result[0][0];
+          if(queryStatus['EL EXAMEN SEGMENTARIO   HA SIDO CREADO CON EXITO']){
+            return resolve({status : 'OK', message :'Examen segmentario creado con exito'});
+          }else{
+            return resolve({status : 'DECLINED', message :'Examen segmentario duplicado'});
+          }
+        }
+      });
+    });
+  },
   closeConnection : function(){
     return connection.end();
   }

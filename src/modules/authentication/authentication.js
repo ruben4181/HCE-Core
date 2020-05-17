@@ -32,7 +32,6 @@ validateUser = function(id, password){
       return resolve(false);
     })
   });
-
 }
 
 checkEP = function(){

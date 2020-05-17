@@ -45,7 +45,7 @@ CREATE PROCEDURE insertExamen (
   IN ID_DIAGNOSTICO BIGINT)
 BEGIN
     START TRANSACTION;
-        INSERT INTO Examenes(idExamen resumen, resultados, anexos, TipoExamen_idTipoExamen, Diagnosticos_idDiagnostico)
+        INSERT INTO Examenes(idExamen, resumen, resultados, anexos, TipoExamen_idTipoExamen, Diagnosticos_idDiagnostico)
       VALUES(ID_EXAMEN, RESUM, RESUL, ANEX, ID_TIPOEXAMEN, ID_DIAGNOSTICO);
     IF ROW_COUNT() > 0 THEN
       SELECT 'EL EXAMEN HA SIDO CREADA CON EXITO', (SELECT MAX(idExamen) FROM Examenes) "Id Examen";

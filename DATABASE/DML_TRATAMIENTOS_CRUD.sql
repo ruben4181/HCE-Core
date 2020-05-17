@@ -1,0 +1,137 @@
+use db_hce_core;
+
+SET autocommit = 0;
+
+DROP PROCEDURE IF EXISTS getTratamientoForId;
+DROP PROCEDURE IF EXISTS insertTratamiento;
+DROP PROCEDURE IF EXISTS deleteTratamiento;
+DROP PROCEDURE IF EXISTS getMedXTrataForId;
+DROP PROCEDURE IF EXISTS insertMedXTrata;
+DROP PROCEDURE IF EXISTS getMedicamentosForId;
+DROP PROCEDURE IF EXISTS insertMedicamentos;
+DROP PROCEDURE IF EXISTS deleteMedicamento;
+
+DELIMITER //
+CREATE PROCEDURE getTratamientoForId (IN ID BIGINT)
+BEGIN
+	IF (SELECT EXISTS (SELECT idTratamiento FROM Tratamientos WHERE idTratamiento = ID)) THEN
+		SELECT concepto "Concepto"
+		FROM Tratamientos
+		WHERE idTratamiento = ID;
+	ELSE
+		SELECT 'NO EXISTE EL TRATAMIENTO';
+	END IF;
+END //
+
+DELIMITER //
+CREATE PROCEDURE insertTratamiento (IN CONCEPTO_ENTRADA VARCHAR(200))
+BEGIN
+
+		START TRANSACTION;
+        INSERT INTO Tratamientos(concepto)
+			VALUES(CONCEPTO_ENTRADA);
+		IF ROW_COUNT() > 0 THEN
+			SELECT 'EL TRATAMIENTO HA SIDO CREADA CON EXITO', (SELECT MAX(idTratamiento) FROM Tratamientos) "Id Tratamiento";
+            COMMIT;
+		ELSE
+			SELECT 'HUBO PROBLEMAS EN LA CREACIÓN DEL TRATAMIENTO';
+			ROLLBACK;
+		END IF;
+END //
+
+DELIMITER //
+CREATE PROCEDURE deleteTratamiento (IN IDBORRAR BIGINT)
+BEGIN
+  IF (SELECT EXISTS (SELECT idTratamiento FROM Tratamientos WHERE idTratamiento = IDBORRAR)) THEN
+    START TRANSACTION;
+        DELETE FROM Tratamientos WHERE idTratamiento = IDBORRAR;
+        IF ROW_COUNT() THEN
+      SELECT 'EL TRATAMIENTO FUE ELIMINADO CON EXITO';
+            COMMIT;
+    ELSE
+      SELECT 'HUBO PROBLEMAS AL BORRAR LOS DATOS';
+            ROLLBACK;
+    END IF;
+  ELSE
+    SELECT 'EL TRATAMIENTO NO EXISTE CON ESE ID';
+  END IF;
+END //
+
+DELIMITER //
+CREATE PROCEDURE getMedXTrataForId (IN ID_IN BIGINT)
+BEGIN
+	IF (SELECT EXISTS (SELECT id FROM MedXTrata WHERE id = ID_IN)) THEN
+		SELECT id "ID Med X Trata",
+			    Medicamentos_idMedicamento "Id Medicamento",
+                Tratamientos_idTratamiento "Id Tratamiento",
+                RepeticionMed "Medicacion"
+		FROM MedXTrata
+		WHERE id = ID_IN;
+	ELSE
+		SELECT 'NO EXISTE EL MEDICAMENTO X TRATAMIENTO';
+	END IF;
+END //
+
+DELIMITER //
+CREATE PROCEDURE insertMedXTrata (IN IDMED BIGINT ,IN IDTRATA BIGINT ,IN REPE VARCHAR(200))
+BEGIN
+
+		START TRANSACTION;
+        INSERT INTO MedXTrata(Medicamentos_idMedicamento, Tratamientos_idTratamiento, RepeticionMed)
+			VALUES(IDMED, IDTRATA, REPE);
+		IF ROW_COUNT() > 0 THEN
+			SELECT 'LA MEDICACION X TRATAMIENTO HA SIDO CREADA CON EXITO', (SELECT MAX(id) FROM MedXTrata) "ID";
+            COMMIT;
+		ELSE
+			SELECT 'HUBO PROBLEMAS EN LA CREACIÓN DE LA MEDICACION X TRATAMIENTO';
+			ROLLBACK;
+		END IF;
+END //
+
+DELIMITER //
+CREATE PROCEDURE getMedicamentosForId (IN ID_IN BIGINT)
+BEGIN
+	IF (SELECT EXISTS (SELECT idMedicamento FROM Medicamentos WHERE idMedicamento = ID_IN)) THEN
+		SELECT idMedicamento "ID Medicamento",
+			    nombreMedicamento "Nombre Medicamento",
+                gramaje "Id Tratamiento"
+		FROM Medicamentos
+		WHERE idMedicamento = ID_IN;
+	ELSE
+		SELECT 'NO EXISTE EL MEDICAMENTO';
+	END IF;
+END //
+
+DELIMITER //
+CREATE PROCEDURE insertMedicamentos (IN NOMBRE VARCHAR(200) ,IN GRAMA FLOAT(10))
+BEGIN
+
+		START TRANSACTION;
+        INSERT INTO Medicamentos(nombreMedicamento, gramaje)
+			VALUES(NOMBRE, GRAMA);
+		IF ROW_COUNT() > 0 THEN
+			SELECT 'LA MEDICACION X TRATAMIENTO HA SIDO CREADA CON EXITO', (SELECT MAX(idMedicamento) FROM Medicamentos) "ID MEDICAMENTO";
+            COMMIT;
+		ELSE
+			SELECT 'HUBO PROBLEMAS EN LA CREACIÓN DEL MEDICAMENTO';
+			ROLLBACK;
+		END IF;
+END //
+
+DELIMITER //
+CREATE PROCEDURE deleteMedicamento (IN IDBORRAR BIGINT)
+BEGIN
+  IF (SELECT EXISTS (SELECT idMedicamento FROM Medicamentos WHERE idMedicamento = IDBORRAR)) THEN
+    START TRANSACTION;
+        DELETE FROM Medicamentos WHERE idMedicamento = IDBORRAR;
+        IF ROW_COUNT() THEN
+      SELECT 'EL MEDICAMENTO FUE ELIMINADO CON EXITO';
+            COMMIT;
+    ELSE
+      SELECT 'HUBO PROBLEMAS AL BORRAR LOS DATOS';
+            ROLLBACK;
+    END IF;
+  ELSE
+    SELECT 'EL MEDICAMENTO NO EXISTE CON ESE ID';
+  END IF;
+END //

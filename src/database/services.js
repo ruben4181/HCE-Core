@@ -304,6 +304,28 @@ module.exports = {
       });
     });
   },
+  modifyPassword : function(DNI, newPassword){
+    return new Promise((resolve, reject) =>{
+      let queryString = "SELECT token FROM Pacientes WHERE DNI=?";
+      let query = connection.query(queryString, [DNI], (err, result)=>{
+        if(err){
+          reject({status : 'ERROR', message : 'Un error ocurrio durante la busqueda del paciente'});
+        } else{
+          if(result.length==0){
+            return reject({status: 'ERROR', message : 'Paciente no existe'});
+          }
+          queryString = "UPDATE Pacientes SET token=? WHERE DNI=?";
+          let query = connection.query(queryString, [newPassword, DNI], (err, result)=>{
+            if(err){
+              reject({status : 'ERROR', message : 'Error al asignar nueva contraseña'});
+            } else {
+              resolve({status : 'OK', message : 'Contraseña modificada correctamente para '+DNI});
+            }
+          });
+        }
+      });
+    });
+  },
   closeConnection : function(){
     return connection.end();
   }

@@ -48,6 +48,13 @@ checkEP();
 
 checkEPAccess = function(entityType, endpoint, user, id){
   if(entityType=='EPS' && user==id){
+    if(id==2){
+      if(endpoint=="/users/modifyPassword:POST"){
+        return true;
+      } else{
+        return false;
+      }
+    }
     if(config.epsEP.indexOf(endpoint) > -1){
       return true;
     }
@@ -111,7 +118,6 @@ module.exports = {
           response.message=err.name;
           reject(response);
         } else{
-
           if(checkEPAccess(decoded.entityType, endpoint, user, decoded.id)){
             response = {status : 'OK', message : 'Valid authorization', decoded : decoded}
           } else{

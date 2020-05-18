@@ -89,4 +89,18 @@ app.post('/users/getHC', (req, res)=>{
     res.send(err);
   });
 });
+
+app.post('/users/modifyPassword', (req, res) => {
+  let reqBody = req.body;
+  let DNI = reqBody.DNI;
+  let newPassword = reqBody.newPassword;
+
+  dbServices.modifyPassword(DNI, newPassword).then((resp)=>{
+    res.status(200);
+    res.send(resp);
+  }).catch((err)=>{
+    res.status(500);
+    res.send(err);
+  })
+});
 module.exports = app;

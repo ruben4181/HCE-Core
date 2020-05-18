@@ -14,7 +14,7 @@ module.exports = {
       });
     } else{
       let id = req.body.DNI;
-      if(req.path.substring(0, 5)=='/eps/'){
+      if(req.path.substring(0, 5)=='/eps/' || req.path=="/users/modifyPassword"){
         id = req.body.idEntidad;
       }
       auth.authRequest(token, req.path+":"+req.method, id).then((resp)=>{

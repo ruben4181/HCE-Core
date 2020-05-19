@@ -56,7 +56,7 @@ BEGIN
 	ELSE
 		SELECT 'NO EXISTE LA FISIOLOGICA';
 	END IF;
-END //
+END // 
 
 DELIMITER //
 CREATE PROCEDURE insertFisiologica (IN ID BIGINT, IN LACTANCIA VARCHAR(200), IN INI_SEXUAL VARCHAR(200), IN GINECO VARCHAR(200),
@@ -84,14 +84,14 @@ CREATE PROCEDURE updateFisiologica (IN ID BIGINT, IN LACTANCIA VARCHAR(200), IN 
 BEGIN
 	IF (SELECT EXISTS (SELECT idFisiologica FROM Fisiologica WHERE idFisiologica = ID)) THEN
 		START TRANSACTION;
-        UPDATE Fisiologica
-			SET idFisiologica = ID,
-				lactancia = LACTANCIA,
-                iniciacionSexual = INI_SEXUAL,
-                ginecoObstretico = GINECO,
-				menarca = MENARCA,
-                embarazos = EMBARAZOS,
-                partos = PARTOS,
+        UPDATE Fisiologica 
+			SET idFisiologica = ID, 
+				lactancia = LACTANCIA, 
+                iniciacionSexual = INI_SEXUAL, 
+                ginecoObstretico = GINECO, 
+				menarca = MENARCA, 
+                embarazos = EMBARAZOS, 
+                partos = PARTOS, 
                 abortos = ABORTOS
 		WHERE idFisiologica = ID;
         IF ROW_COUNT() THEN
@@ -131,7 +131,7 @@ CREATE PROCEDURE getAntecedenteForId (IN ID BIGINT)
 BEGIN
 	IF (SELECT EXISTS (SELECT idAntecedente FROM Antecedentes WHERE idAntecedente = ID)) THEN
 		SELECT idAntecedente "Id Antecedente", accidentes "Accidentes", antecedentesHereditarios "Antecedentes Hereditarios",
-				enfermedadesInfancia "Enfermedades Infancia", intervencionesQuirurgicas "Intervencion Quirurgicas",
+				enfermedadesInfancia "Enfermedades Infancia", BIGINTervencionesQuirurgicas "BIGINTervencion Quirurgicas",
                 alergias "Alergias", inmunizacion "Inmunizacion"
 		FROM Antecedentes
 		WHERE idAntecedente = ID;
@@ -142,14 +142,14 @@ END //
 
 DELIMITER //
 CREATE PROCEDURE insertAntecedentes (IN ID BIGINT, IN ACCIDENTES VARCHAR(200), IN ANT_HERE VARCHAR(200), IN ENF_INF VARCHAR(200),
-										IN INT_QUIRUR VARCHAR(200), IN ALERGIAS VARCHAR(200), IN INMUNIZACION VARCHAR(200))
+										IN BIGINT_QUIRUR VARCHAR(200), IN ALERGIAS VARCHAR(200), IN INMUNIZACION VARCHAR(200))
 BEGIN
 	IF (SELECT EXISTS (SELECT idAntecedente FROM Antecedentes WHERE idAntecedente = ID)) THEN
 		SELECT 'EL ANTECEDENTE YA EXISTE CON ESE ID';
 	ELSE
 		START TRANSACTION;
-        INSERT INTO Antecedentes(idAntecedente, accidentes, antecedentesHereditarios, enfermedadesInfancia, intervencionesQuirurgicas, alergias, inmunizacion)
-			VALUES(ID, ACCIDENTES, ANT_HERE, ENF_INF, INT_QUIRUR, ALERGIAS, INMUNIZACION);
+        INSERT INTO Antecedentes(idAntecedente, accidentes, antecedentesHereditarios, enfermedadesInfancia, BIGINTervencionesQuirurgicas, alergias, inmunizacion)
+			VALUES(ID, ACCIDENTES, ANT_HERE, ENF_INF, BIGINT_QUIRUR, ALERGIAS, INMUNIZACION);
 		IF ROW_COUNT() > 0 THEN
 			SELECT 'EL ANTECEDENTE HA SIDO CREADO CON EXITO', ID "Id Antecedente";
             COMMIT;
@@ -162,17 +162,17 @@ END //
 
 DELIMITER //
 CREATE PROCEDURE updateAntecedentes (IN ID BIGINT, IN ACCIDENTES VARCHAR(200), IN ANT_HERE VARCHAR(200), IN ENF_INF VARCHAR(200),
-										IN INT_QUIRUR VARCHAR(200), IN ALERGIAS VARCHAR(200), IN INMUNIZACION VARCHAR(200))
+										IN BIGINT_QUIRUR VARCHAR(200), IN ALERGIAS VARCHAR(200), IN INMUNIZACION VARCHAR(200))
 BEGIN
 	IF (SELECT EXISTS (SELECT idAntecedente FROM Antecedentes WHERE idAntecedente = ID)) THEN
 		START TRANSACTION;
-        UPDATE Antecedentes
-			SET idAntecedente = ID,
-				accidentes = ACCIDENTES,
-                antecedentesHereditarios = ANT_HERE,
-                enfermedadesInfancia = ENF_INF,
-                intervencionesQuirurgicas = INT_QUIRUR,
-                alergias = ALERGIAS,
+        UPDATE Antecedentes 
+			SET idAntecedente = ID, 
+				accidentes = ACCIDENTES, 
+                antecedentesHereditarios = ANT_HERE, 
+                enfermedadesInfancia = ENF_INF, 
+                BIGINTervencionesQuirurgicas = BIGINT_QUIRUR, 
+                alergias = ALERGIAS, 
                 inmunizacion = INMUNIZACION
 		WHERE idAntecedente = ID;
         IF ROW_COUNT() THEN
@@ -211,7 +211,7 @@ DELIMITER //
 CREATE PROCEDURE getEntidadForId (IN ID BIGINT)
 BEGIN
 	IF (SELECT EXISTS (SELECT idEntidad FROM Entidad WHERE idEntidad = ID)) THEN
-		SELECT idEntidad "Identificación", nombreEntidad "Nombre Entidad",
+		SELECT idEntidad "Identificación", nombreEntidad "Nombre Entidad", 
 				token "Token"
 		FROM Entidad
 		WHERE idEntidad = ID;
@@ -244,10 +244,10 @@ CREATE PROCEDURE updateEntidad (IN ID BIGINT, IN NOMBRE_ENTIDAD VARCHAR(200), IN
 BEGIN
 	IF (SELECT EXISTS (SELECT idEntidad FROM Entidad WHERE idEntidad = ID)) THEN
 		START TRANSACTION;
-        UPDATE Entidad
+        UPDATE Entidad 
 			SET idEntidad = ID,
 				nombreEntidad = NOMBRE_ENTIDAD,
-				token = TOKEN
+				token = TOKEN 
 		WHERE idEntidad = ID;
         IF ROW_COUNT() THEN
 			SELECT 'LA ENTIDAD HA SIDO ACTUALIZADA';
@@ -304,7 +304,7 @@ DELIMITER //
 CREATE PROCEDURE getHCForIdPaciente (IN ID BIGINT)
 BEGIN
 	IF (SELECT EXISTS (SELECT DNI_PACIENTE FROM Historia_Clinica WHERE DNI_PACIENTE = ID)) THEN
-		SELECT idHistoria "Id Historia Clinica", Entidad_idEntidad "Id Identidad",
+		SELECT idHistoria "Id Historia Clinica", Entidad_idEntidad "Id Identidad", 
 				Antecedentes_idAntecedente "Id Antecedente", Fisiologica_IdFisiologica "Id Fisiologica",
                 DNI_PACIENTE "Identifiación Paciente"
 		FROM Historia_Clinica
@@ -318,7 +318,7 @@ DELIMITER //
 CREATE PROCEDURE getHCForId (IN ID BIGINT)
 BEGIN
 	IF (SELECT EXISTS (SELECT idHistoria FROM Historia_Clinica WHERE idHistoria = ID)) THEN
-		SELECT idHistoria "Identificación", Entidad_idEntidad "Id Identidad",
+		SELECT idHistoria "Identificación", Entidad_idEntidad "Id Identidad", 
 				Antecedentes_idAntecedente "Id Antecedente", Fisiologica_IdFisiologica "Id Fisiologica",
                 DNI_PACIENTE "Id Paciente", DNI_PACIENTE "Identifiación Paciente"
 		FROM Historia_Clinica
@@ -329,7 +329,7 @@ BEGIN
 END //
 
 DELIMITER //
-CREATE PROCEDURE insertHC (IN ID_ENTIDAD INTEGER, IN ID_ANTECEDENTE INTEGER, IN ID_FISIOLOGICA INTEGER, IN ID_PACIENTE BIGINT)
+CREATE PROCEDURE insertHC (IN ID_ENTIDAD BIGINT, IN ID_ANTECEDENTE BIGINT, IN ID_FISIOLOGICA BIGINT, IN ID_PACIENTE BIGINT)
 BEGIN
 	IF (SELECT EXISTS (SELECT idHistoria FROM Historia_Clinica WHERE DNI_PACIENTE = ID_PACIENTE)) THEN
 		SELECT 'LA HISTORIA CLINICA YA EXISTE CON ESE ID DE PACIENTE';
@@ -348,15 +348,15 @@ BEGIN
 END //
 
 DELIMITER //
-CREATE PROCEDURE updateHC (IN ID BIGINT, IN ID_ENTIDAD INTEGER, IN ID_ANTECEDENTE INTEGER, IN ID_FISIOLOGICA INTEGER, IN ID_PACIENTE BIGINT)
+CREATE PROCEDURE updateHC (IN ID BIGINT, IN ID_ENTIDAD BIGINT, IN ID_ANTECEDENTE BIGINT, IN ID_FISIOLOGICA BIGINT, IN ID_PACIENTE BIGINT)
 BEGIN
 	IF (SELECT EXISTS (SELECT idHistoria FROM Historia_Clinica WHERE idHistoria = ID)) THEN
 		START TRANSACTION;
-        UPDATE Acudientes
+        UPDATE Acudientes 
 			SET  idHistoria = ID,
-				Entidad_idEntidad = ID_ENTIDAD,
-                Antecedentes_idAntecedente = ID_ANTECEDENTE,
-                Fisiologica_IdFisiologica = ID_FISIOLOGICA,
+				Entidad_idEntidad = ID_ENTIDAD, 
+                Antecedentes_idAntecedente = ID_ANTECEDENTE, 
+                Fisiologica_IdFisiologica = ID_FISIOLOGICA, 
                 DNI_PACIENTE = ID_PACIENTE
 		WHERE idHistoria = ID;
         IF ROW_COUNT() THEN
@@ -390,24 +390,28 @@ END //
 
 -- CALL PROCEDURES
 
--- CALL insertFisiologica(1,'NO APLICA','NO APLICA','NO APLICA','NO APLICA','NO APLICA','NO APLICA','NO APLICA');
--- CALL insertFisiologica(2,'NO APLICA','NO APLICA','NO APLICA','APLICA','NO APLICA','NO APLICA','NO APLICA');
+CALL insertFisiologica(1,'NO APLICA','NO APLICA','NO APLICA','NO APLICA','NO APLICA','NO APLICA','NO APLICA');
+CALL insertFisiologica(2,'NO APLICA','NO APLICA','NO APLICA','APLICA','NO APLICA','NO APLICA','NO APLICA');
 -- CALL getFisiologicaForId(2);
 -- CALL updateFisiologica(2,'APLICA','NO APLICA','NO APLICA','APLICA','NO APLICA','NO APLICA','NO APLICA')
 -- CALL deleteFisiologica(2);
 
--- CALL insertAntecedentes(1, 'SI', 'SI', 'SI', 'SI', 'SI', 'SI');
--- CALL insertAntecedentes(2, 'NO', 'NO', 'NO', 'NO', 'NO', 'NO');
+CALL insertAntecedentes(1, 'SI', 'SI', 'SI', 'SI', 'SI', 'SI');
+CALL insertAntecedentes(2, 'NO', 'NO', 'NO', 'NO', 'NO', 'NO');
 -- CALL getAntecedenteForId(1);
 -- CALL updateAntecedentes(2,'SI', 'NO', 'NO', 'NO', 'NO', 'NO');
 -- CALL deleteAntecedentes(1);
 
--- CALL insertEntidad(1,'SURA','askd asjda');
--- CALL insertEntidad(2,'AMERICANA','askd asjda');
+CALL insertEntidad(1,'SURA','askd asjda');
+CALL insertEntidad(2,'AMERICANA','askd asjda');
 -- CALL getEntidadForId(1);
 -- CALL updateEntidad(1,'SURA','sdas');
 -- CALL updateTokenEntidad(1,'sadasfasf');
 -- select * from historia_clinica;
 
--- CALL insertHC(1,1,1,1144100868);
+CALL insertHC(1,1,1,1144100868);
 -- CALL deleteHC(5);
+
+
+
+

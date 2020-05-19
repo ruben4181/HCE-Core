@@ -1,4 +1,4 @@
-use db_hce_core;
+--use db_hce_core;
 
 SET autocommit = 0;
 
@@ -22,12 +22,12 @@ DELIMITER //
 CREATE PROCEDURE getExamenForId (IN ID BIGINT)
 BEGIN
   IF (SELECT EXISTS (SELECT idExamen FROM Examenes WHERE idExamen = ID)) THEN
-    SELECT idExamen "Id Examen",
-        resumen "Resumen",
-        resultados "Resultados",
-        anexos "Anexos",
-        TipoExamen_idTipoExamen "Id Tipo Examen",
-        Diagnosticos_idDiagnostico "Id Diagnostico"
+    SELECT idExamen "idExamen", 
+        resumen "resumen", 
+        resultados "resultados",
+        anexos "anexos",
+        TipoExamen_idTipoExamen "idTipoExamen",
+        Diagnosticos_idDiagnostico "idDiagnostico"
     FROM Examenes
     WHERE idExamen = ID;
   ELSE
@@ -37,16 +37,15 @@ END //
 
 DELIMITER //
 CREATE PROCEDURE insertExamen (
-  IN ID_EXAMEN BIGINT,
   IN RESUM VARCHAR(200),
   IN RESUL VARCHAR(200),
-  IN ANEX VARCHAR(200),
+  IN ANEX VARCHAR(200), 
   IN ID_TIPOEXAMEN BIGINT,
   IN ID_DIAGNOSTICO BIGINT)
 BEGIN
     START TRANSACTION;
-        INSERT INTO Examenes(idExamen, resumen, resultados, anexos, TipoExamen_idTipoExamen, Diagnosticos_idDiagnostico)
-      VALUES(ID_EXAMEN, RESUM, RESUL, ANEX, ID_TIPOEXAMEN, ID_DIAGNOSTICO);
+        INSERT INTO Examenes(resumen, resultados, anexos, TipoExamen_idTipoExamen, Diagnosticos_idDiagnostico)
+      VALUES(RESUM, RESUL, ANEX, ID_TIPOEXAMEN, ID_DIAGNOSTICO);
     IF ROW_COUNT() > 0 THEN
       SELECT 'EL EXAMEN HA SIDO CREADA CON EXITO', (SELECT MAX(idExamen) FROM Examenes) "Id Examen";
 	  COMMIT;
@@ -58,16 +57,16 @@ END //
 
 DELIMITER //
 CREATE PROCEDURE updateExamen (
-  IN ID BIGINT,
+  IN ID BIGINT, 
   IN RESUM VARCHAR(200),
   IN RESUL VARCHAR(200),
-  IN ANEX VARCHAR(200),
+  IN ANEX VARCHAR(200), 
   IN ID_TIPOEXAMEN BIGINT,
   IN ID_DIAGNOSTICO BIGINT)
 BEGIN
   IF (SELECT EXISTS (SELECT idExamen FROM Examenes WHERE idExamen = ID)) THEN
     START TRANSACTION;
-        UPDATE Examenes
+        UPDATE Examenes 
 			SET idExamen = ID,
 				resumen = RESUM,
 				resultados = RESUL,
@@ -109,7 +108,7 @@ DELIMITER //
 CREATE PROCEDURE getTipoExamenForId (IN ID BIGINT)
 BEGIN
   IF (SELECT EXISTS (SELECT idTipoExamen FROM TipoExamen WHERE idTipoExamen = ID)) THEN
-    SELECT idTipoExamen "Id Tipo de examen",
+    SELECT idTipoExamen "Id Tipo de examen", 
         nombreTipo "Nombre de tipo de examen"
     FROM TipoExamen
     WHERE idTipoExamen = ID;
@@ -119,22 +118,18 @@ BEGIN
 END //
 
 DELIMITER //
-CREATE PROCEDURE insertTipoExamen (IN ID BIGINT, IN NOMBRE_TIPOEXAMEN VARCHAR(200))
+CREATE PROCEDURE insertTipoExamen (IN NOMBRE_TIPOEXAMEN VARCHAR(200))
 BEGIN
-  IF (SELECT EXISTS (SELECT idTipoExamen FROM TipoExamen WHERE idTipoExamen = ID)) THEN
-    SELECT 'LA ENTIDAD YA EXISTE CON ESE ID';
-  ELSE
     START TRANSACTION;
-        INSERT INTO TipoExamen(idTipoExamen, nombreTipo)
-      VALUES(ID, NOMBRE_TIPOEXAMEN);
+        INSERT INTO TipoExamen(nombreTipo)
+      VALUES(NOMBRE_TIPOEXAMEN);
     IF ROW_COUNT() > 0 THEN
-		SELECT 'EL TIPO EXAMEN HA SIDO CREADA CON EXITO', ID "ID EXAMEN";
+		SELECT 'EL TIPO EXAMEN HA SIDO CREADA CON EXITO';
             COMMIT;
     ELSE
       SELECT 'HUBO PROBLEMAS EN LA CREACIÓN DEL TIPO EXAMEN';
       ROLLBACK;
     END IF;
-  END IF;
 END //
 
 DELIMITER //
@@ -142,7 +137,7 @@ CREATE PROCEDURE updateTipoExamen (IN ID BIGINT, IN NOMBRE_TIPOEXAMEN VARCHAR(20
 BEGIN
   IF (SELECT EXISTS (SELECT idTipoExamen FROM TipoExamen WHERE idTipoExamen = ID)) THEN
     START TRANSACTION;
-        UPDATE TipoExamen
+        UPDATE TipoExamen 
 			SET idTipoExamen = ID,
 				nombreTipo = NOMBRE_TIPOEXAMEN
 		WHERE idTipoExamen = ID;
@@ -180,9 +175,9 @@ DELIMITER //
 CREATE PROCEDURE getDiagnosticoForId (IN ID BIGINT)
 BEGIN
   IF (SELECT EXISTS (SELECT idDiagnostico FROM Diagnosticos WHERE idDiagnostico = ID)) THEN
-    SELECT idDiagnostico "Id Diagnostico",
-        Diagnostico "Diagnostico",
-        Citas_Medicas_idConsulta "ID Cita Medica"
+    SELECT idDiagnostico "idDiagnostico", 
+        Diagnostico "diagnostico",
+        Citas_Medicas_idConsulta "idCitaMedica"
     FROM Diagnosticos
     WHERE idDiagnostico = ID;
   ELSE
@@ -191,11 +186,11 @@ BEGIN
 END //
 
 DELIMITER //
-CREATE PROCEDURE insertDiagnostico (IN ID_DIAGNOSTICO BIGINT, IN DIAG VARCHAR(200), IN ID_CITA BIGINT)
+CREATE PROCEDURE insertDiagnostico (IN DIAG VARCHAR(200), IN ID_CITA BIGINT)
 BEGIN
     START TRANSACTION;
-        INSERT INTO Diagnosticos(idDiagnostico, Diagnostico, Citas_Medicas_idConsulta)
-      VALUES(ID_DIAGNOSTICO, DIAG, ID_CITA);
+        INSERT INTO Diagnosticos(Diagnostico, Citas_Medicas_idConsulta)
+      VALUES( DIAG, ID_CITA);
     IF ROW_COUNT() > 0 THEN
       SELECT 'EL DIAGNOSTICO HA SIDO CREADA CON EXITO', (SELECT MAX(idDiagnostico) FROM Diagnosticos) "Id Diagnostico";
             COMMIT;
@@ -210,7 +205,7 @@ CREATE PROCEDURE updateDiagnostico (IN ID BIGINT, IN DIAG VARCHAR(200), IN ID_CI
 BEGIN
   IF (SELECT EXISTS (SELECT idDiagnostico FROM Diagnosticos WHERE idDiagnostico = ID)) THEN
     START TRANSACTION;
-        UPDATE Diagnosticos
+        UPDATE Diagnosticos 
       SET idDiagnostico = ID,
         Diagnostico = DIAG,
         Citas_Medicas_idConsulta = ID_CITA

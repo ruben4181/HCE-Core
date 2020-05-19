@@ -1,4 +1,4 @@
-use db_hce_core;
+--use db_hce_core;
 
 SET autocommit = 0;
 SET SQL_SAFE_UPDATES = 0;
@@ -51,13 +51,13 @@ BEGIN
 END //
 
 -- EXAMEN FISICO
-
+DELIMITER//
 CREATE PROCEDURE get_Examen_Fisico_ForId (IN ID BIGINT)
 BEGIN
 	IF (SELECT EXISTS (SELECT idExamen FROM Examen_Fisico WHERE idExamen = ID)) THEN
-		SELECT idExamen "Id Examen", estadoConciencia "Estado Conciencia", lenguaje "Lenguaje", auditivo "Auditivo",
-				 agudezaVisual "Agudeza Visual", peso "Peso",  estatura "Estatura", facie "Facie",
-                 edadRealAparente "Edad Real Aparente" ,temperatura "Temperatura", actitud "Actitud"
+		SELECT idExamen "idExamen", estadoConciencia "estadoConciencia", lenguaje "lenguaje", auditivo "auditivo",
+				 agudezaVisual "agudezaVisual", peso "peso",  estatura "estatura", facie "facie", 
+                 edadRealAparente "edadRealAparente" ,temperatura "temperatura", actitud "actitud"
 		FROM Examen_Fisico
 		WHERE idExamen = ID;
 	ELSE
@@ -66,12 +66,12 @@ BEGIN
 END //
 
 DELIMITER //
-CREATE PROCEDURE insertExamen_Fisico (IN ID_EXAMEN BIGINT, IN ESTADOCONCIENCIA VARCHAR(200), IN LENGUAJE VARCHAR(200), IN AUDITIVO VARCHAR(200), IN AGUDEZAVISUAL VARCHAR(200),
+CREATE PROCEDURE insertExamen_Fisico (IN ESTADOCONCIENCIA VARCHAR(200), IN LENGUAJE VARCHAR(200), IN AUDITIVO VARCHAR(200), IN AGUDEZAVISUAL VARCHAR(200), 
 								IN PESO FLOAT(10), IN ESTATURA FLOAT(10), IN FACIE VARCHAR(200),IN  EDADREALAPATENTE VARCHAR(200), IN TEMPERATURA FLOAT(10),IN  ACTITUD VARCHAR(200))
 BEGIN
 	START TRANSACTION;
-	INSERT INTO Examen_Fisico(idExamen, estadoConciencia,  lenguaje,  auditivo, agudezaVisual, peso, estatura, facie, edadRealAparente, temperatura, actitud)
-		VALUES(ID_EXAMEN, ESTADOCONCIENCIA, LENGUAJE, AUDITIVO, AGUDEZAVISUAL, PESO, ESTATURA ,FACIE, EDADREALAPATENTE, TEMPERATURA, ACTITUD);
+	INSERT INTO Examen_Fisico(estadoConciencia,  lenguaje,  auditivo, agudezaVisual, peso, estatura, facie, edadRealAparente, temperatura, actitud)
+		VALUES(ESTADOCONCIENCIA, LENGUAJE, AUDITIVO, AGUDEZAVISUAL, PESO, ESTATURA ,FACIE, EDADREALAPATENTE, TEMPERATURA, ACTITUD);
 	IF ROW_COUNT() > 0 THEN
 		SELECT 'EL EXAMEN FISICO HA SIDO CREADO CON EXITO', (SELECT MAX(idExamen) FROM Examen_Fisico) "ID Examen";
 		COMMIT;
@@ -82,14 +82,14 @@ BEGIN
 END //
 
 DELIMITER //
-CREATE PROCEDURE updateExamen_Fisico(IN ID BIGINT, IN ESTADOCONCIENCIA VARCHAR(200), IN LENGUAJE VARCHAR(200), IN AUDITIVO VARCHAR(200), IN AGUDEZAVISUAL VARCHAR(200),
+CREATE PROCEDURE updateExamen_Fisico(IN ID BIGINT, IN ESTADOCONCIENCIA VARCHAR(200), IN LENGUAJE VARCHAR(200), IN AUDITIVO VARCHAR(200), IN AGUDEZAVISUAL VARCHAR(200), 
 								IN PESO FLOAT(10), IN ESTATURA FLOAT(10), IN FACIE VARCHAR(200),IN  EDADREALAPATENTE VARCHAR(200), IN TEMPERATURA FLOAT(10),IN  ACTITUD VARCHAR(200))
 BEGIN
-	IF (SELECT EXISTS (SELECT idExamen FROM Examen_Fisico WHERE idExamen = ID)) THEN
+	IF (SELECT EXISTS (SELECT idExamen FROM Examen_Fisico WHERE idExamen = ID)) THEN 
 		START TRANSACTION;
-        UPDATE Examen_Fisico
-			SET
-			estadoConciencia = ESTADOCONCIENCIA ,
+        UPDATE Examen_Fisico 
+			SET 
+			estadoConciencia = ESTADOCONCIENCIA , 
 			lenguaje= LENGUAJE ,
 			auditivo= AUDITIVO ,
 			agudezaVisual= AGUDEZAVISUAL ,
@@ -136,8 +136,8 @@ DELIMITER //
 CREATE PROCEDURE get_Habito_ForId (IN ID BIGINT)
 BEGIN
 	IF (SELECT EXISTS (SELECT idHabito FROM Habitos WHERE idHabito = ID)) THEN
-		SELECT idHabito "Id Habito", alimentacion "Alimentacion", sed "Sed", diuresis "Diuresis",catarsisintestinal "Catarsis intestinal",
-			   sueno "Sueno",  relacionesSexuales "Relaciones Sexuales", alcohol "Alcohol", tabaco "Tabaco" ,drogas "Drogas", medicacion "Medicacion"
+		SELECT idHabito "idHabito", alimentacion "alimentacion", sed "sed", diuresis "diuresis",catarsisBIGINTestinal "catarsisIntestinal",
+			   sueno "sueno",  relacionesSexuales "relacionesSexuales", alcohol "alcohol", tabaco "tabaco" ,drogas "drogas", medicacion "medicacion"
 		FROM Habitos
 		WHERE idHabito = ID;
 	ELSE
@@ -146,14 +146,14 @@ BEGIN
 END //
 
 DELIMITER //
-CREATE PROCEDURE insertHabito (IN ID_HABITO BIGINT, IN ALIMENTACION VARCHAR(200),IN APETITO VARCHAR(200), IN SED VARCHAR(200), IN DIURESIS VARCHAR(200),
-						 IN CATARSISINTESTINAL VARCHAR(200), IN SUENO VARCHAR(200), IN RELACIONESSEXUALES VARCHAR(200), IN ALCOHOL VARCHAR(200), IN TABACO VARCHAR(200),
+CREATE PROCEDURE insertHabito (IN ALIMENTACION VARCHAR(200),IN APETITO VARCHAR(200), IN SED VARCHAR(200), IN DIURESIS VARCHAR(200),
+						 IN CATARSISBIGINTESTINAL VARCHAR(200), IN SUENO VARCHAR(200), IN RELACIONESSEXUALES VARCHAR(200), IN ALCOHOL VARCHAR(200), IN TABACO VARCHAR(200),
 						  IN DROGAS VARCHAR(200), IN MEDICACION VARCHAR(200))
 BEGIN
 	START TRANSACTION;
-	INSERT INTO Habitos(idHabito, alimentacion, apetito, sed, diuresis, catarsisintestinal, sueno, relacionesSexuales,
+	INSERT INTO Habitos(alimentacion, apetito, sed, diuresis, catarsisBIGINTestinal, sueno, relacionesSexuales,
 					alcohol, tabaco, drogas, medicacion)
-		VALUES(ID_HABITO, ALIMENTACION, APETITO, SED, DIURESIS, CATARSISINTESTINAL, SUENO, RELACIONESSEXUALES,
+		VALUES(ALIMENTACION, APETITO, SED, DIURESIS, CATARSISBIGINTESTINAL, SUENO, RELACIONESSEXUALES,
 				ALCOHOL, TABACO, DROGAS, MEDICACION);
 	IF ROW_COUNT() > 0 THEN
 		SELECT 'EL HABITO   HA SIDO CREADA CON EXITO', (SELECT MAX(idHabito) FROM Habitos) "ID Habito";
@@ -166,18 +166,18 @@ END //
 
 DELIMITER //
 CREATE PROCEDURE updateHabito(IN ID BIGINT,IN ALIMENTACION VARCHAR(200),IN APETITO VARCHAR(200), IN SED VARCHAR(200), IN  DIURESIS VARCHAR(200),
-						 IN CATARSISINTESTINAL VARCHAR(200), IN SUENO VARCHAR(200), IN RELACIONESSEXUALES VARCHAR(200), IN ALCOHOL VARCHAR(200), IN TABACO VARCHAR(200),
+						 IN CATARSISBIGINTESTINAL VARCHAR(200), IN SUENO VARCHAR(200), IN RELACIONESSEXUALES VARCHAR(200), IN ALCOHOL VARCHAR(200), IN TABACO VARCHAR(200),
 						  IN DROGAS VARCHAR(200), IN MEDICACION VARCHAR(200))
 BEGIN
 	IF (SELECT EXISTS (SELECT idHabito FROM Habitos WHERE idHabito = ID)) THEN
 		START TRANSACTION;
-        UPDATE Habitos
+        UPDATE Habitos 
 			SET idHabito = IDHABITO ,
-			alimentacion = ALIMENTACION ,
+			alimentacion = ALIMENTACION , 
 			apetito= APETITO ,
 			sed= SED ,
 			diuresis = DIURESIS,
-			catarsisintestinal= CATARSISINTESTINAL ,
+			catarsisBIGINTestinal= CATARSISBIGINTESTINAL ,
 			sueno= SUENO ,
 			relacionesSexuales= RELACIONESSEXUALES ,
 			alcohol= ALCOHOL ,
@@ -221,10 +221,10 @@ DELIMITER //
 CREATE PROCEDURE get_ExamenSegmentario_ForId (IN ID BIGINT)
 BEGIN
 	IF (SELECT EXISTS (SELECT idExamen FROM ExamenSegmentario WHERE idExamen = ID)) THEN
-		SELECT idExamen "Id Examen", cabeza "Cabeza", cuello "Cuello",torax "Torax", AparatoCirculatorio "Aparato Circulatorio",
-				AparatoRespiratorio " Aparato Respiratorio",  Abdomen "Abdomen",  AparatoUrogenital "Aparato Urogenital",
-				SistemaNervioso "Sistema Nervioso", psicologicoMental "Psicologico Mental" ,perine "Perine",
-				examenGenital "Examen Genital ", miembrosSuperiores "Miembros Superiores", miembrosInferiores "Miembros Inferiores"
+		SELECT idExamen "idExamenSeg", cabeza "cabeza", cuello "cuello",torax "torax", AparatoCirculatorio "aparatoCirculatorio",
+				AparatoRespiratorio "aparatoRespiratorio",  Abdomen "abdomen",  AparatoUrogenital "aparatoUrogenital", 
+				SistemaNervioso "sistemaNervioso", psicologicoMental "psicologicoMental" ,perine "perine",
+				examenGenital "examenGenital", miembrosSuperiores "miembrosSuperiores", miembrosInferiores "miembrosInferiores"  
 
 		FROM ExamenSegmentario
 		WHERE idExamen = ID;
@@ -235,17 +235,17 @@ END //
 
 
 DELIMITER //
-CREATE PROCEDURE insertExamenSegmentario (IN ID_EXAMEN BIGINT, IN CABEZA VARCHAR(200),IN CUELLO VARCHAR(200), IN TORAX VARCHAR(200), IN APARATOCIRCULATORIO VARCHAR(200),
-	 					IN APARATORESPIRATORIO VARCHAR(200), IN ABDOMEN VARCHAR(200),
+CREATE PROCEDURE insertExamenSegmentario (IN CABEZA VARCHAR(200),IN CUELLO VARCHAR(200), IN TORAX VARCHAR(200), IN APARATOCIRCULATORIO VARCHAR(200),
+	 					IN APARATORESPIRATORIO VARCHAR(200), IN ABDOMEN VARCHAR(200),	 
 	 					IN APARATOUROGENITAL VARCHAR(200), IN SISTEMANERVIOSO VARCHAR(200), IN PSICOLOGICOMENTAL VARCHAR(200), IN PERINE VARCHAR(200),
 						  IN EXAMENGENITAL VARCHAR(200), IN MIEMBROSSUPERIOES VARCHAR(200), IN MIEMBROSINFERIORES VARCHAR(200))
 BEGIN
 	START TRANSACTION;
-	INSERT INTO ExamenSegmentario(idExamen, cabeza,  cuello, torax,  AparatoCirculatorio,  AparatoRespiratorio,  Abdomen,
-       				 AparatoUrogenital,  SistemaNervioso,  psicologicoMental,  perine,  examenGenital, miembrosSuperiores,
+	INSERT INTO ExamenSegmentario(cabeza,  cuello, torax,  AparatoCirculatorio,  AparatoRespiratorio,  Abdomen, 
+       				 AparatoUrogenital,  SistemaNervioso,  psicologicoMental,  perine,  examenGenital, miembrosSuperiores, 
        				  miembrosInferiores)
-	VALUES(ID_EXAMEN, CABEZA,  CUELLO, TORAX,  APARATOCIRCULATORIO,  APARATORESPIRATORIO,  ABDOMEN,
-					 APARATOUROGENITAL,  SISTEMANERVIOSO,  PSICOLOGICOMENTAL,  PERINE,  EXAMENGENITAL,
+	VALUES(CABEZA,  CUELLO, TORAX,  APARATOCIRCULATORIO,  APARATORESPIRATORIO,  ABDOMEN, 
+					 APARATOUROGENITAL,  SISTEMANERVIOSO,  PSICOLOGICOMENTAL,  PERINE,  EXAMENGENITAL, 
 					 MIEMBROSSUPERIOES,  MIEMBROSINFERIORES);
 	IF ROW_COUNT() > 0 THEN
 		SELECT 'EL EXAMEN SEGMENTARIO   HA SIDO CREADO CON EXITO', (SELECT MAX(idExamen) FROM ExamenSegmentario) "ID Examen Segmentario";
@@ -258,15 +258,15 @@ END //
 
 DELIMITER //
 CREATE PROCEDURE updateExamenSegmentario(IN ID BIGINT,IN CABEZA VARCHAR(200),IN CUELLO VARCHAR(200), IN TORAX VARCHAR(200), IN APARATOCIRCULATORIO VARCHAR(200),
-	 					IN APARATORESPIRATORIO VARCHAR(200), IN ABDOMEN VARCHAR(200),
+	 					IN APARATORESPIRATORIO VARCHAR(200), IN ABDOMEN VARCHAR(200),	 
 	 					IN APARATOUROGENITAL VARCHAR(200), IN SISTEMANERVIOSO VARCHAR(200), IN PSICOLOGICOMENTAL VARCHAR(200), IN PERINE VARCHAR(200),
 						  IN EXAMENGENITAL VARCHAR(200), IN MIEMBROSSUPERIOES VARCHAR(200), IN MIEMBROSINFERIORES VARCHAR(200))
 BEGIN
-	IF (SELECT EXISTS (SELECT idExamen FROM ExamenSegmentario WHERE idExamen = ID)) THEN
+	IF (SELECT EXISTS (SELECT idExamen FROM ExamenSegmentario WHERE idExamen = ID)) THEN 
 		START TRANSACTION;
-        UPDATE ExamenSegmentario
+        UPDATE ExamenSegmentario 
 			SET idExamen = IDEXAMEN ,
-			cabeza = CABEZA ,
+			cabeza = CABEZA , 
 			cuello= CUELLO ,
 			torax= TORAX ,
 			AparatoCirculatorio = APARATOCIRCULATORIO,
@@ -318,8 +318,9 @@ DELIMITER //
 CREATE PROCEDURE get_Citas_Medicas_ForId (IN ID BIGINT)
 BEGIN
 	IF (SELECT EXISTS (SELECT idConsulta FROM Citas_Medicas WHERE idConsulta = ID)) THEN
-		SELECT idConsulta "Id Consulta", fecha "Fecha",motivo "Motivo", epsAgenda "agenda", Medicos_idMedico "Medicos_Idmedicos",
-				Examen_Fisico_idExamen "Examen_Fisico_idExamen", Historia_Clinica_idHistoria "Historia_Clinica_idHistoria"
+		SELECT idConsulta "idConsulta", fecha "fecha",motivo "motivo", epsAgenda "agenda", Medicos_idMedico "idMedicos",
+				Examen_Fisico_idExamen "idExamen", Historia_Clinica_idHistoria "idHistoria",
+				Habitos_idHabito "idHabito", ExSegmentario_idExamen "idExamenSeg"
 		FROM Citas_Medicas
 		WHERE idConsulta = ID;
 	ELSE
@@ -328,16 +329,16 @@ BEGIN
 END //
 
 DELIMITER //
-CREATE PROCEDURE insertCitas_Medicas (IN ID_CONSULTA BIGINT, IN FECHA TIMESTAMP,IN MOTIVO VARCHAR(200), IN EPSAGENDA BIGINT,IN MEDICOS_IDMEDICOS BIGINT,
+CREATE PROCEDURE insertCitas_Medicas (IN FECHA TIMESTAMP,IN MOTIVO VARCHAR(200), IN EPSAGENDA BIGINT,IN MEDICOS_IDMEDICOS BIGINT,
 								 IN EXAMEN_FISICO_IDEXAMEN BIGINT, IN ID_HAB BIGINT,IN ID_EX_SEG BIGINT,IN HISTORIA_CLINICA_IDHISTORIA BIGINT)
 BEGIN
 	START TRANSACTION;
-	INSERT INTO Citas_Medicas(idConsulta, fecha ,motivo , epsAgenda , Medicos_idMedico ,Examen_Fisico_idExamen,
+	INSERT INTO Citas_Medicas(fecha ,motivo , epsAgenda , Medicos_idMedico ,Examen_Fisico_idExamen, 
 							Habitos_idHabito,ExSegmentario_idExamen,Historia_Clinica_idHistoria )
-		VALUES(ID_CONSULTA, FECHA , MOTIVO , EPSAGENDA , MEDICOS_IDMEDICOS ,
+		VALUES( FECHA , MOTIVO , EPSAGENDA , MEDICOS_IDMEDICOS ,
 					EXAMEN_FISICO_IDEXAMEN ,ID_HAB, ID_EX_SEG,HISTORIA_CLINICA_IDHISTORIA );
 	IF ROW_COUNT() > 0 THEN
-		SELECT 'LA CITA MEDICA HA SIDO CREADA CON EXITO', (SELECT MAX(idConsulta) FROM Citas_Medicas) "Id Cita Medica";
+		SELECT 'LA CITA MEDICA HA SIDO CREADA CON EXITO', (SELECT MAX(idConsulta) FROM Citas_Medicas) "Id Cita Medica"; 
 		COMMIT;
 	ELSE
 		SELECT 'HUBO PROBLEMAS EN LA CREACIÓN DE LA CITA MEDICA';
@@ -351,11 +352,11 @@ CREATE PROCEDURE updateCitas_Medicas(IN ID BIGINT, IN FECHA TIMESTAMP,IN MOTIVO 
 BEGIN
 	IF (SELECT EXISTS (SELECT idConsulta FROM Citas_Medicas WHERE idConsulta = ID)) THEN
 		START TRANSACTION;
-        UPDATE Citas_Medicas
+        UPDATE Citas_Medicas 
 			SET idConsulta = ID,
 				fecha = FECHA,
-				motivo= MOTIVO ,
-				epsAgenda=EPSAGENDA ,
+				motivo= MOTIVO , 
+				epsAgenda=EPSAGENDA , 
 				Medicos_idMedico=MEDICOS_IDMEDICOS ,
 				Examen_Fisico_idExamen= EXAMEN_FISICO_IDEXAMEN ,
                 Habitos_idHabito  = ID_HAB,
@@ -391,7 +392,6 @@ BEGIN
 		SELECT 'LA CITA MEDICA NO EXISTE CON ESE ID';
 	END IF;
 END //
-DELIMITER //
 
 -- CALLS
 

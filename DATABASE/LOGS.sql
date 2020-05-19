@@ -1,0 +1,75 @@
+use db_hce_core;
+
+SET autocommit = 0;
+
+DROP TABLE Logs;
+DROP PROCEDURE IF EXISTS getLogForId;
+DROP PROCEDURE IF EXISTS insertLog;
+DROP PROCEDURE IF EXISTS deleteLog;
+
+CREATE TABLE Logs(
+	IdLog BIGINT AUTO_INCREMENT,
+    IdEntidad BIGINT NOT NULL,
+    DNIMedico BIGINT NOT NULL,
+    Descripción TEXT,
+    Fecha TIMESTAMP,
+    CONSTRAINT pk_idLog PRIMARY KEY (IdLog)
+);
+
+ALTER TABLE Logs ADD CONSTRAINT FK_idEntidad_Logs FOREIGN KEY FK_idEntidad_Logs (IdEntidad)
+    REFERENCES Entidad (idEntidad);
+
+ALTER TABLE Logs ADD CONSTRAINT FK_DNIMedico_Logs FOREIGN KEY FK_DNIMedico_Logs (DNIMedico)
+    REFERENCES Medicos (DNI);
+    
+DELIMITER //
+CREATE PROCEDURE getLogForId (IN ID BIGINT)
+BEGIN
+	IF (SELECT EXISTS (SELECT IdLog FROM Logs WHERE IdLog = ID)) THEN
+		SELECT IdLog "Id Log",
+               IdEntidad "Id Entidad",
+               DNIMedico "DNI Medico",
+               Descripción "Descripcion",
+               Fecha "Fecha de ingreso"
+		FROM Logs
+		WHERE IdLog = ID;
+	ELSE
+		SELECT 'NO EXISTE REGISTRO DE ESE LOG';
+	END IF;
+END // 
+
+DELIMITER //
+CREATE PROCEDURE insertLog (IN IDENT BIGINT, IN DNIMED BIGINT, IN DESCRIP TEXT)
+BEGIN
+		START TRANSACTION;
+        INSERT INTO Logs(IdEntidad, DNIMedico, Descripción, Fecha)
+			VALUES(IDENT, DNIMED, DESCRIP, sysdate());
+		IF ROW_COUNT() > 0 THEN
+			SELECT MAX(IdLog) "Id Log" FROM Logs;
+            COMMIT;
+		ELSE
+			SELECT 'ERROR DE COMUNICACIÓN';
+			ROLLBACK;
+		END IF;
+END //
+
+DELIMITER //
+CREATE PROCEDURE deleteLog (IN IDBORRAR BIGINT)
+BEGIN
+  IF (SELECT EXISTS (SELECT IdLog FROM Logs WHERE IdLog = IDBORRAR)) THEN
+    START TRANSACTION;
+        DELETE FROM Logs WHERE IdLog = IDBORRAR;
+        IF ROW_COUNT() THEN
+      SELECT 'ELIMINADO CON EXITO';
+            COMMIT;
+    ELSE
+      SELECT 'HUBO PROBLEMAS AL BORRAR LOS DATOS';
+            ROLLBACK;
+    END IF;
+  ELSE
+    SELECT 'EL TRATAMIENTO NO EXISTE CON ESE ID';
+  END IF;
+END //
+
+-- CALL getLogForId(2);
+-- CALL insertLog(1, 9491698, 'Prueba 1');

@@ -1,6 +1,6 @@
 show databases;
 
-use db_hce_core;
+--use db_hce_core;
 
 -- Created by Vertabelo (http://vertabelo.com)
 -- Last modification date: 2020-04-13 20:55:18.296
@@ -24,7 +24,7 @@ DROP TABLE Entidad CASCADE;
 DROP TABLE Fisiologica CASCADE;
 DROP TABLE AcudientesXPacientes CASCADE;
 DROP TABLE Pacientes CASCADE;
-DROP TABLE acudientes CASCADE;
+DROP TABLE Acudientes CASCADE;
 
 -- tables
 -- Table: Acudientes
@@ -51,7 +51,7 @@ CREATE TABLE Antecedentes (
     accidentes varchar(200) NOT NULL,
     antecedentesHereditarios varchar(200) NOT NULL,
     enfermedadesInfancia varchar(200) NOT NULL,
-    intervencionesQuirurgicas varchar(200) NOT NULL,
+    BIGINTervencionesQuirurgicas varchar(200) NOT NULL,
     alergias varchar(200) NOT NULL,
     inmunizacion varchar(200) NOT NULL,
     CONSTRAINT Antecedentes_pk PRIMARY KEY (idAntecedente)
@@ -161,7 +161,7 @@ CREATE TABLE Habitos (
     apetito varchar(200) NOT NULL,
     sed varchar(200) NOT NULL,
     diuresis varchar(200) NOT NULL,
-    catarsisIntestinal varchar(200) NOT NULL,
+    catarsisBIGINTestinal varchar(200) NOT NULL,
     sueno varchar(200) NOT NULL,
     relacionesSexuales varchar(200) NOT NULL,
     alcohol varchar(200) NOT NULL,
@@ -221,7 +221,7 @@ CREATE TABLE Pacientes (
 
 -- Table: TipoExamen
 CREATE TABLE TipoExamen (
-    idTipoExamen BIGINT NOT NULL,
+    idTipoExamen BIGINT NOT NULL AUTO_INCREMENT,
     nombreTipo varchar(200) NOT NULL,
     CONSTRAINT TipoExamen_pk PRIMARY KEY (idTipoExamen)
 );
@@ -236,10 +236,10 @@ CREATE TABLE Tratamientos (
 -- foreign keys
 ALTER TABLE AcudientesXPacientes ADD CONSTRAINT FK_idPaciente FOREIGN KEY FK_idPaciente(DNIPACIENTE)
 	REFERENCES Pacientes(DNI);
-
+    
 ALTER TABLE AcudientesXPacientes ADD CONSTRAINT FK_idAcudiente FOREIGN KEY FK_idAcudiente(DNIACUDIENTE)
 	REFERENCES Acudientes(DNI);
-
+    
 -- Reference: CitasMedicasExamenSegmentario (table: Citas_Medicas)
 ALTER TABLE Citas_Medicas ADD CONSTRAINT CitasMedicasExamenSegmentario FOREIGN KEY CitasMedicasExamenSegmentario (ExSegmentario_idExamen)
     REFERENCES ExamenSegmentario (idExamen);
@@ -303,7 +303,7 @@ ALTER TABLE MedXTrata ADD CONSTRAINT MedXDiagXTrata_Medicamentos FOREIGN KEY Med
 -- Reference: MedXTrataXDiag_Tratamientos (table: MedXTrata)
 ALTER TABLE MedXTrata ADD CONSTRAINT MedXTrataXDiag_Tratamientos FOREIGN KEY MedXTrataXDiag_Tratamientos (Tratamientos_idTratamiento)
     REFERENCES Tratamientos (idTratamiento);
-
+    
 -- unique keys
 -- Reference (Unique key in Historias clinicas)
 ALTER TABLE Historia_Clinica ADD CONSTRAINT U_Pacientes_idPaciente UNIQUE (DNI_PACIENTE);
@@ -343,7 +343,7 @@ CREATE INDEX ix_Habitos_idHabito ON Citas_Medicas (Habitos_idHabito);
 CREATE INDEX ix_ExSegmentario_idExamen ON Citas_Medicas (ExSegmentario_idExamen);
 CREATE INDEX  ix_Historia_Clinica_idHistoria ON Citas_Medicas (Historia_Clinica_idHistoria);
 
--- References Examenes
+-- References Examenes 
 CREATE INDEX ix_TipoExamen_idTipoExamen ON Examenes (TipoExamen_idTipoExamen);
 CREATE INDEX ix_Diagnosticos_idDiagnostico ON Examenes (Diagnosticos_idDiagnostico);
 
@@ -357,5 +357,6 @@ CREATE INDEX ix_Tratamientos_idTratamiento ON DiagXTrata (Tratamientos_idTratami
 -- References MedXTrata
 CREATE INDEX ix_Medicamentos_idMedicamento ON MedXTrata (Medicamentos_idMedicamento);
 CREATE INDEX ix_Tratamientos_idTratamiento ON MedXTrata (Tratamientos_idTratamiento);
-
+ 
 -- End of file.
+

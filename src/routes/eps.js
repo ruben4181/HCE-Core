@@ -197,7 +197,7 @@ app.post('/eps/getHC', (req, res)=>{
       id : resp.data.antecedentes["Id Antecedente"],
       accidentes : resp.data.antecedentes["Accidentes"],
       enfermedadesInfancia : resp.data.antecedentes["Enfermedades Infancia"],
-      intervencionesQuirurgicas : resp.data.antecedentes["Intervencion Quirurgicas"],
+      intervencionesQuirurgicas : resp.data.antecedentes["BIGINTervencion Quirurgicas"],
       alergias : resp.data.antecedentes["Alergias"],
       inmunizacion : resp.data.antecedentes["Inmunizacion"]
     };

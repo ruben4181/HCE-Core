@@ -220,5 +220,242 @@ app.post('/eps/getHC', (req, res)=>{
   });
 });
 
+//Nicolas
+app.post('/eps/getMedicos', (req, res)=>{
+  dbServices.getMedicos().then((resp)=>{
+    res.status(200);
+    res.send(resp);
+  }).catch((err)=>{
+    res.status(500);
+    res.send(err);
+  });
+});
+
+app.post('/eps/createMedico', (req, res)=>{
+  let reqHeaders = req.headers;
+  let reqBody = req.body;
+  let DNI = reqBody.DNI;
+  let nombre = reqBody.nombre;
+  let fechaNacimiento = reqBody.fechaNacimiento;
+  let telefono = reqBody.telefono;
+  dbServices.createMedico(DNI, nombre, fechaNacimiento, telefono)
+  .then((response)=>{
+      res.status(200);
+      res.send(response);
+    }).catch((err)=>{
+      res.status(500);
+      res.send({
+        status : 'ERROR',
+        message : 'Ha ocurrido un error en el servidor, intente de nuevo mas tarde'
+      });
+    });
+});
+
+app.post('/eps/getTratamientos', (req, res)=>{
+  dbServices.getTratamientos().then((resp)=>{
+    res.status(200);
+    res.send(resp);
+  }).catch((err)=>{
+    res.status(500);
+    res.send(err);
+  });
+});
+
+
+app.post('/eps/createTratamiento', (req, res)=>{
+  let reqHeaders = req.headers;
+  let reqBody = req.body;
+  let concepto = reqBody.concepto;
+  dbServices.createTratamiento(concepto)
+  .then((response)=>{
+      res.status(200);
+      res.send(response);
+    }).catch((err)=>{
+      res.status(500);
+      res.send({
+        status : 'ERROR',
+        message : 'Ha ocurrido un error en el servidor, intente de nuevo mas tarde'
+      });
+    });
+});
+
+app.post('/eps/addTratamientoxdiagnostico', (req, res)=>{
+  let reqHeaders = req.headers;
+  let reqBody = req.body;
+  let idDiagnostico = reqBody.idDiagnostico;
+  let idTratamiento = reqBody.idTratamiento;
+  dbServices.addTratamientoxdiagnostico(idDiagnostico,idTratamiento)
+  .then((response)=>{
+      res.status(200);
+      res.send(response);
+    }).catch((err)=>{
+      res.status(500);
+      res.send({
+        status : 'ERROR',
+        message : 'Ha ocurrido un error en el servidor, intente de nuevo mas tarde'
+      });
+    });
+});
+app.post('/eps/createDiagnostico', (req, res)=>{
+  let reqHeaders = req.headers;
+  let reqBody = req.body;
+  let diagnostico = reqBody.diagnostico;
+  let idCita = reqBody.idCita;
+  dbServices.createDiagnostico(diagnostico,idCita)
+  .then((response)=>{
+      res.status(200);
+      res.send(response);
+    }).catch((err)=>{
+      res.status(500);
+      res.send({
+        status : 'ERROR',
+        message : 'Ha ocurrido un error en el servidor, intente de nuevo mas tarde'
+      });
+    });
+});
+
+app.post('/eps/createTipoExamen', (req, res)=>{
+  let reqHeaders = req.headers;
+  let reqBody = req.body;
+  let nombre = reqBody.nombre;
+  dbServices.createTipoExamen(nombre)
+  .then((response)=>{
+      res.status(200);
+      res.send(response);
+    }).catch((err)=>{
+      res.status(500);
+      res.send({
+        status : 'ERROR',
+        message : 'Ha ocurrido un error en el servidor, intente de nuevo mas tarde'
+      });
+    });
+});
+
+app.post('/eps/getTipoExamenes', (req, res)=>{
+  dbServices.getTipoExamenes().then((resp)=>{
+    res.status(200);
+    res.send(resp);
+  }).catch((err)=>{
+    res.status(500);
+    res.send(err);
+  });
+});
+
+app.post('/eps/createExamen', (req, res)=>{
+  let reqHeaders = req.headers;
+  let reqBody = req.body;
+  let resumen = reqBody.resumen;
+  let resultado = reqBody.resultado;
+  let anexo = reqBody.anexo;
+  let idTipoExamen = reqBody.idTipoExamen;
+  let idDiagnostico = reqBody.idDiagnostico;
+  dbServices.createExamen(resumen,resultado,anexo,idTipoExamen,idDiagnostico)
+  .then((response)=>{
+      res.status(200);
+      res.send(response);
+    }).catch((err)=>{
+      res.status(500);
+      res.send({
+        status : 'ERROR',
+        message : 'Ha ocurrido un error en el servidor, intente de nuevo mas tarde'
+      });
+    });
+});
+
+app.post('/eps/createCita', (req, res)=>{
+  let reqHeaders = req.headers;
+  let reqBody = req.body;
+  let idHistoriaClinica = reqBody.idHistoriaClinica;
+  let fecha = reqBody.fecha;
+  let motivo = reqBody.motivo;
+  let epsAgenda = reqBody.epsAgenda;
+  let idMedico = reqBody.idMedico;
+  let examenFisico = reqBody.examenFisico;
+  let habitos = reqBody.habitos;
+  let examenSegmentario = reqBody.examenSegmentario;
+  dbServices.createCitaMedica(idHistoriaClinica, fecha, motivo, epsAgenda,idMedico,examenFisico,habitos,examenSegmentario)
+  .then((response)=>{
+      res.status(200);
+      res.send(response);
+    }).catch((err)=>{
+      res.status(500);
+      res.send({
+        status : 'ERROR',
+        message : 'Ha ocurrido un error en el servidor, intente de nuevo mas tarde'
+      });
+    });
+});
+
+app.post('/eps/getCitas', (req, res)=>{
+  let reqBody = req.body;
+  let DNI = reqBody.DNI;
+  dbServices.getCitas(DNI).then((resp)=>{
+    res.status(200);
+    res.send(resp);
+  }).catch((err)=>{
+    res.status(500);
+    res.send(err);
+  });
+});
+
+// Jhoan
+
+app.post('/eps/getMedicamentos', (req, res)=> {
+  dbServices.getMedicamentos().then((resp)=>{
+    res.status(200);
+    res.send(resp);
+  }).catch((err)=>{
+    res.status(500);
+    res.send(err);
+  });
+});
+
+app.post('/eps/createMedicamento', (req, res)=>{
+  let reqHeaders = req.headers;
+  let reqBody = req.body;
+  let nombre = reqBody.nombre;
+  let gramaje = reqBody.gramaje;
+  dbServices.createMedicamento(nombre, gramaje)
+  .then((response)=>{
+      res.status(200);
+      res.send(response);
+    }).catch((err)=>{
+      res.status(500);
+      res.send({
+        status : 'ERROR',
+        message : 'Ha ocurrido un error en el servidor, intente de nuevo mas tarde'
+      });
+    });
+});
+
+app.post('/eps/addMedicamentoxTratamiento', (req, res)=>{
+  let reqHeaders = req.headers;
+  let reqBody = req.body;
+  let idMedicamento = reqBody.idMedicamento;
+  let idTratamiento = reqBody.idTratamiento;
+  let Repeticion = reqBody.repeticion;
+  dbServices.addMedicamentoxTratamiento(idMedicamento, idTratamiento, Repeticion)
+  .then((response)=>{
+      res.status(200);
+      res.send(response);
+    }).catch((err)=>{
+      res.status(500);
+      res.send({
+        status : 'ERROR',
+        message : 'Ha ocurrido un error en el servidor, intente de nuevo mas tarde'
+      });
+    });
+});
+
+app.post('/eps/getCitaMedica', (req, res)=>{
+  let reqBody = req.body;
+  let id = reqBody.idCitaMedica;
+  dbServices.getCitaMedicaByID(id).then((resp)=>{
+    res.send(resp);
+  }).catch((err)=>{
+    res.status(500);
+    res.send(err);
+  });
+});
 
 module.exports = app;

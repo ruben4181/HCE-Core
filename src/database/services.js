@@ -326,6 +326,919 @@ module.exports = {
       });
     });
   },
+  //Nicolas
+  createMedico : function(DNI,nombre,fecha,telefono){
+    return new Promise((resolve, reject)=>{
+      let queryString = "call insertMedico(?, ?, ?, ?)";
+      let query = connection.query(queryString, [DNI, nombre, fecha,
+        telefono], (err, result)=>{
+          response = {status : 'DECLINED', message : 'ERROR al crear medico'};
+          if(err){
+            reject(err);
+          } else{
+            response = {status : 'DECLINED', message : 'Medico ya existe'}
+            let queryStatus = result[0][0]['EL MEDICO HA SIDO CREADO CON EXITO'];
+            if(queryStatus!=undefined){
+              response = {status : 'OK', message : 'Medico creado exitosamente'}
+            }
+            resolve(response);
+          }
+      });
+    });
+  },
+  getMedicos : function(){
+    return new Promise((resolve, reject)=>{
+      let queryString = "call getMedicos";
+      let query = connection.query(queryString, [], (err, result)=>{
+        if(err){
+          reject(err);
+        } else{
+          queryStatus = result[0][0];
+          if(queryStatus['NO EXISTEN MEDICOS REGISTRADOS']==undefined){
+              resolve({
+                status : 'OK',
+                data : result[0]
+              });
+          }
+          resolve({
+            status : 'ERROR',
+            message : 'No hay medicos registrados'
+          });
+        }
+      });
+    });
+  },
+  createTratamiento : function(concepto){
+    return new Promise((resolve, reject)=>{
+      let queryString = "call insertTratamiento(?)";
+      let query = connection.query(queryString, [concepto], (err, result)=>{
+          response = {status : 'DECLINED', message : 'ERROR al crear tratamiento'};
+          if(err){
+            reject(err);
+          } else{
+            response = {status : 'DECLINED', message : 'Medico ya existe'}
+            let queryStatus = result[0][0]['EL TRATAMIENTO HA SIDO CREADA CON EXITO'];
+            if(queryStatus!=undefined){
+              response = {status : 'OK', message : 'tratamiento creado exitosamente'}
+            }
+            resolve(response);
+          }
+      });
+    });
+  },
+  addTratamientoxdiagnostico : function(idDiag,idTrat){
+    return new Promise((resolve, reject)=>{
+      let queryString = "call insertDiagXTrata(?,?)";
+      let query = connection.query(queryString, [idDiag,idTrat], (err, result)=>{
+          response = {status : 'DECLINED', message : 'ERROR al agregar tratamiento'};
+          if(err){
+            reject(err);
+          } else{
+            response = {status : 'DECLINED', message : 'Tratamiento ya agregado'}
+            let queryStatus = result[0][0]['EL DIAGNOSTICO X TRATAMIENTO HA SIDO CREADA CON EXITO'];
+            if(queryStatus!=undefined){
+              response = {status : 'OK', message : 'tratamiento creado exitosamente'}
+            }
+            resolve(response);
+          }
+      });
+    });
+  },
+
+  getTratamientos : function(){
+    return new Promise((resolve, reject)=>{
+      let queryString = "call getTratamientos";
+      let query = connection.query(queryString, [], (err, result)=>{
+        if(err){
+          reject(err);
+        } else{
+          queryStatus = result[0][0];
+          if(queryStatus['NO HAY TRATAMIENTOS REGISTRADOS']==undefined){
+              resolve({
+                status : 'OK',
+                data : result[0]
+              });
+          }
+          resolve({
+            status : 'ERROR',
+            message : 'No hay tratamientos registrados'
+          });
+        }
+      });
+    });
+  },
+
+  createDiagnostico : function(diag,idCita){
+    return new Promise((resolve, reject)=>{
+      let queryString = "call insertDiagnostico(?,?)";
+      let query = connection.query(queryString, [diag,idCita], (err, result)=>{
+          response = {status : 'DECLINED', message : 'ERROR al crear diagnostico'};
+          if(err){
+            reject(err);
+          } else{
+            response = {status : 'DECLINED', message : 'diagnostico ya existe'}
+            let queryStatus = result[0][0]['EL DIAGNOSTICO HA SIDO CREADA CON EXITO'];
+            if(queryStatus!=undefined){
+              response = {status : 'OK', message : 'tratamiento creado exitosamente'}
+            }
+            resolve(response);
+          }
+      });
+    });
+  },
+
+  createTipoExamen : function(nombre) {
+    return new Promise((resolve, reject)=>{
+      let queryString = "call insertTipoExamen(?)";
+      let query = connection.query(queryString, [nombre], (err, result)=>{
+          response = {status : 'DECLINED', message : 'ERROR al crear Tipo Examen'};
+          if(err){
+            reject(err);
+          } else{
+            response = {status : 'DECLINED', message : 'Tipo Examen ya existe'}
+            let queryStatus = result[0][0]['EL TIPO EXAMEN HA SIDO CREADA CON EXITO'];
+            if(queryStatus!=undefined){
+              response = {status : 'OK', message : 'Tipo Examen creado exitosamente'}
+            }
+            resolve(response);
+          }
+      });
+    });
+  },
+
+  getTipoExamenes : function(){
+    return new Promise((resolve, reject)=>{
+      let queryString = "call getTipoExamenes";
+      let query = connection.query(queryString, [], (err, result)=>{
+        if(err){
+          reject(err);
+        } else{
+          queryStatus = result[0][0];
+          if(queryStatus['NO HAY TIPO EXAMENES REGISTRADOS']==undefined){
+              resolve({
+                status : 'OK',
+                data : result[0]
+              });
+          }
+          resolve({
+            status : 'ERROR',
+            message : 'No hay tipo examenes registrados'
+          });
+        }
+      });
+    });
+  },
+
+  createExamen : function(resumen,resultado,anexo,idTipoExamen,idDiagnostico){
+    return new Promise((resolve, reject)=>{
+      let queryString = "call insertExamen(?,?,?,?,?)";
+      let query = connection.query(queryString, [resumen,resultado,anexo,idTipoExamen,idDiagnostico], (err, result)=>{
+          response = {status : 'DECLINED', message : 'ERROR al crear Examen'};
+          if(err){
+            reject(err);
+          } else{
+            response = {status : 'DECLINED', message : 'Examen ya existe'}
+            let queryStatus = result[0][0]['EL EXAMEN HA SIDO CREADA CON EXITO'];
+            if(queryStatus!=undefined){
+              response = {status : 'OK', message : 'Examen creado exitosamente'}
+            }
+            resolve(response);
+          }
+      });
+    });
+  },
+
+  getMedicoByDNI : function(DNI){
+    return new Promise((resolve, reject)=>{
+      let queryString = "call getMedicoForDNI(?)";
+      let query = connection.query(queryString, [DNI], (err, result)=>{
+        if(err){
+          reject(err);
+        } else{
+          queryStatus = result[0][0];
+          if(queryStatus['NO EXISTE EL MEDICO']==undefined){
+              resolve({
+                status : 'OK',
+                data : result[0][0]
+              });
+          }
+          resolve({
+            status : 'ERROR',
+            message : 'Medico no existe'
+          });
+        }
+      });
+
+    });
+  },
+
+  getTratamientoById : function(ID){
+    return new Promise((resolve, reject)=>{
+      let queryString = "call getTratamientoForId(?)";
+      let query = connection.query(queryString, [ID], (err, result)=>{
+        if(err){
+          reject(err);
+        } else{
+          queryStatus = result[0][0];
+          if(queryStatus['NO EXISTE EL TRATAMIENTO']==undefined){
+              resolve({
+                status : 'OK',
+                data : result[0][0]
+              });
+          }
+          resolve({
+            status : 'ERROR',
+            message : ' Tratamiento no existe'
+          });
+        }
+      });
+
+    });
+  },
+
+  getDiagnosticoById : function(ID){
+    return new Promise((resolve, reject)=>{
+      let queryString = "call getDiagnosticoForId(?)";
+      let query = connection.query(queryString, [ID], (err, result)=>{
+        if(err){
+          reject(err);
+        } else{
+          queryStatus = result[0][0];
+          if(queryStatus['NO EXISTE EL DIAGNOSTICO']==undefined){
+              resolve({
+                status : 'OK',
+                data : result[0][0]
+              });
+          }
+          resolve({
+            status : 'ERROR',
+            message : 'Diagnostico no existe'
+          });
+        }
+      });
+
+    });
+  },
+
+  getExamenFisicoById : function(Id){
+    return new Promise((resolve, reject)=>{
+      let queryString = "call get_Examen_Fisico_ForId(?)";
+      let query = connection.query(queryString, [Id], (err, result)=>{
+        if(err){
+          reject(err);
+        } else{
+          queryStatus = result[0][0];
+          if(queryStatus['NO EXISTE EL EXAMEN FISICO CON ESE ID']==undefined){
+              resolve({
+                status : 'OK',
+                data : result[0][0]
+              });
+          }
+          resolve({
+            status : 'ERROR',
+            message : 'Examen Fisico no existe'
+          });
+        }
+      });
+
+    });
+  },
+
+  getHabitoById : function(Id){
+    return new Promise((resolve, reject)=>{
+      let queryString = "call get_Habito_ForId(?)";
+      let query = connection.query(queryString, [Id], (err, result)=>{
+        if(err){
+          reject(err);
+        } else{
+          queryStatus = result[0][0];
+          if(queryStatus['NO EXISTE EL HABITO  CON ESE ID']==undefined){
+              resolve({
+                status : 'OK',
+                data : result[0][0]
+              });
+          }
+          resolve({
+            status : 'ERROR',
+            message : 'Examen de habitos no existe'
+          });
+        }
+      });
+
+    });
+  },
+
+  getExamenSegmentarioById : function(Id){
+    return new Promise((resolve, reject)=>{
+      let queryString = "call get_ExamenSegmentario_ForId(?)";
+      let query = connection.query(queryString, [Id], (err, result)=>{
+        if(err){
+          reject(err);
+        } else{
+          queryStatus = result[0][0];
+          if(queryStatus['NO EXISTE EL EXAMEN SEGMENTARIO  CON ESE ID']==undefined){
+              resolve({
+                status : 'OK',
+                data : result[0][0]
+              });
+          }
+          resolve({
+            status : 'ERROR',
+            message : 'Examen segmentario no existe'
+          });
+        }
+      });
+
+    });
+  },
+
+  getTipoExamenById : function(Id){
+    return new Promise((resolve, reject)=>{
+      let queryString = "call getTipoExamenForId(?)";
+      let query = connection.query(queryString, [Id], (err, result)=>{
+        if(err){
+          reject(err);
+        } else{
+          queryStatus = result[0][0];
+          if(queryStatus['NO EXISTE EL TIPO EXAMEN']==undefined){
+              resolve({
+                status : 'OK',
+                data : result[0][0]
+              });
+          }
+          resolve({
+            status : 'ERROR',
+            message : 'Tipo examen no existe'
+          });
+        }
+      });
+
+    });
+  },
+
+  getExamenesById : function(ID){
+    return new Promise((resolve, reject)=>{
+      response = {status : 'DECLINED', message : 'Examen no existe'};
+      this.getExamenById(ID).then((result)=>{
+        if(result.status=='OK'){
+          let examen = result.data;
+          this.getTipoExamenById(examen["Id Tipo de examen"]).then((result)=>{
+            if(result.status=='OK'){
+              let nombreExamen = result.data["Nombre de tipo de examen"];
+              resolve({
+                status : 'OK',
+                data : {exam : examen, nombre : nombreExamen}
+              });
+            }else{
+              resolve(response);
+            }
+          }).catch((err)=>{
+            reject(err);
+          });
+        }else{
+          resolve(response);
+        }
+      }).catch((err)=>{
+        reject(err);
+      });
+    });
+  },
+
+  getTratamientoMById : function(ID){
+    return new Promise((resolve, reject)=>{
+      response = {status : 'DECLINED', message : 'tratamiento no existe'};
+      this.getTratamientoById(ID).then((result)=>{
+        if(result.status=='OK'){
+          let tratamientot = result.data;
+          this.getMedicamentosByIdTratamiento(ID).then((result)=>{
+            if(result.status=='OK'){
+              let medicamentost = result.data;
+              resolve({
+                status : 'OK',
+                data : {tratamiento : tratamientot, medicamentos : medicamentost}
+              });
+            }else{
+              resolve(response);
+            }
+          }).catch((err)=>{
+            reject(err);
+          });
+        }else{
+          resolve(response);
+        }
+      }).catch((err)=>{
+        reject(err);
+      });
+    });
+  },
+
+  getMedicamentosByIdTratamiento : function(Id){
+    return new Promise((resolve, reject)=>{
+      let queryString = "call getMedsXTrataForId(?)";
+      let query = connection.query(queryString, [Id], (err, result)=>{
+        if(err){
+          reject(err);
+        } else{
+          queryStatus = result[0][0];
+          if(queryStatus['NO HAY MEDICAMENTOS PARA ESE TRATAMIENTO']==undefined){
+              resolve({
+                status : 'OK',
+                data : result[0]
+              });
+          }
+          resolve({
+            status : 'ERROR',
+            message : 'No hay medicamentos'
+          });
+        }
+      });
+    });
+  },
+
+  getTratamientoMById : function(ID){
+    return new Promise((resolve, reject)=>{
+      response = {status : 'DECLINED', message : 'tratamiento no existe'};
+      this.getTratamientoById(ID).then((result)=>{
+        if(result.status=='OK'){
+          let tratamientot = result.data;
+          this.getMedicamentosByIdTratamiento(ID).then((result)=>{
+            if(result.status=='OK'){
+              let medicamentost = result.data;
+              resolve({
+                status : 'OK',
+                data : {tratamiento : tratamientot, medicamentos : medicamentost}
+              });
+            }else{
+              resolve(response);
+            }
+          }).catch((err)=>{
+            reject(err);
+          });
+        }else{
+          resolve(response);
+        }
+      }).catch((err)=>{
+        reject(err);
+      });
+    });
+  },
+
+
+  getTratamientoByIdDiagnostico : function(Id){
+    return new Promise((resolve, reject)=>{
+      let queryString = "call getDiagXTratasForId(?)";
+      let query = connection.query(queryString, [Id], (err, result)=>{
+        if(err){
+          reject(err);
+        } else{
+          queryStatus = result[0][0];
+          if(queryStatus['NO HAY TRATAMIENTOS PARA ESE DIAGNOSTICO']==undefined){
+              resolve({
+                status : 'OK',
+                data : result
+              });
+          }
+          resolve({
+            status : 'ERROR',
+            message : 'No hay tratamientos para ese diagnostico'
+          });
+        }
+      });
+    });
+  },
+
+  getDiagnosticoConTratamientosById : function(ID){
+    return new Promise((resolve, reject)=>{
+      response = {status : 'DECLINED', message : 'diagnostico no existe'};
+      this.getDiagnosticoById(ID).then((result)=>{
+        if(result.status=='OK'){
+          let diagnosticot = result.data;
+          this.getTratamientoByIdDiagnostico(ID).then((result)=>{
+            if(result.status=='OK'){
+              let tratamientost = result.data;
+              this.getTratamientoByIdDiagnostico(ID).then((result)=>{
+                if(result.status=='OK'){
+                  var tratamientost = result.data;
+                  var i;
+                  for (i = 0; i < tratamientost.length; i++) {
+                    this.getTratamientoMById(tratamientost[i]["Id tratamiento"]).then((result)=>{
+                      if(result.status=='OK'){
+
+                        tratamientost[i] = result.data;
+                      }else{
+                        resolve(response);
+                      }
+                    }).catch((err)=>{
+                      reject(err);
+                    });
+                  }
+                  resolve({
+                    status : 'OK',
+                    data : {diagnostico : diagnosticot, tratamientos : tratamientost[0]}
+                  });
+                }else{
+                  resolve(response);
+                }
+              }).catch((err)=>{
+                reject(err);
+              });
+            }else{
+              resolve(response);
+            }
+          }).catch((err)=>{
+            reject(err);
+          });
+        }else{
+          resolve(response);
+        }
+      }).catch((err)=>{
+        reject(err);
+      });
+    });
+  },
+
+  getDiagnosticosById : function(ID){
+    return new Promise((resolve, reject)=>{
+      var diagnosticost;
+      response = {status : 'DECLINED', message : 'tratamiento no existe'};
+      this.getDiagnosticosByIdCita(ID).then((result)=>{
+        if(result.status=='OK'){
+          diagnosticost = result.data;
+          for (i = 0; i < diagnosticost.length; i++) {
+            this.getDiagnosticoConTratamientosById(diagnosticost[i]["idDiagnostico"]).then((result)=>{
+              if(result.status=='OK'){
+                diagnosticost[i] = result.data;
+                this.getExamenesByDiagnostico(diagnosticost[i].diagnostico["idDiagnostico"]).then((result)=>{
+                  if(result.status=='OK'){
+                    diagnosticost[i]={
+                      examenes : result.data,
+                      diagnostico  : diagnosticost[i].diagnostico,
+                      tratamientos : diagnosticost[i].tratamientos
+                    };
+                    if(i == diagnosticost.length - 1){
+                      resolve({
+                        status : 'OK',
+                        data : diagnosticost
+                      });
+                    }
+                  }else{
+                    resolve(response);
+                  }
+                }).catch((err)=>{
+                  reject(err);
+                });
+              }else{
+                resolve(response);
+              }
+            }).catch((err)=>{
+              reject(err);
+            });
+          }
+        }else{
+          resolve(response);
+        }
+      }).catch((err)=>{
+        reject(err);
+      });
+    });
+  },
+
+  getDiagnosticosByIdCita : function(Id){
+    return new Promise((resolve, reject)=>{
+      let queryString = "call getDiagnosticosByIdCita(?)";
+      let query = connection.query(queryString, [Id], (err, result)=>{
+        if(err){
+          reject(err);
+        } else{
+          queryStatus = result[0][0];
+          if(queryStatus['NO HAY NINGUN DIAGNOSTICO']==undefined){
+              resolve({
+                status : 'OK',
+                data : result[0]
+              });
+          }
+          resolve({
+            status : 'ERROR',
+            message : 'No hay diagnosticos'
+          });
+        }
+      });
+    });
+  },
+
+  getCitas : function(DNI){
+    return new Promise((resolve, reject)=>{
+      this.getHCForDNI(DNI).then((result)=>{
+        if(result.status=='OK'){
+          let queryString = "call get_Citas(?)";
+          let query = connection.query(queryString, [result.data.id], (err, result)=>{
+            if(err){
+              reject(err);
+            } else{
+              queryStatus = result[0][0];
+              if(queryStatus['NO HAY CITAS MEDICAS']==undefined){
+                  resolve({
+                    status : 'OK',
+                    data : result[0]
+                  });
+              }
+              resolve({
+                status : 'ERROR',
+                message : 'No hay citas'
+              });
+            }
+          });
+        }else{
+          resolve({
+                status : 'ERROR',
+                message : 'No hay citas'
+              });
+        }
+      }).catch((err)=>{
+        reject(err);
+      });
+    });
+  },
+
+  createCitaMedica : function(idHistoriaClinica, fecha, motivo, epsAgenda,idMedico,examenFisico,habitos,examenS){
+    return new Promise((resolve, reject)=>{
+      var ok = 1;
+      var idExamenFisico=0;
+      var idHabitos=0;
+      var idExamenS=0;
+      response = {status : 'DECLINED', message : 'Error al crear cita medica'};
+      this.createExamenFisico(examenFisico).then((result)=>{
+        if(result.status=='OK'){
+          idExamenFisico=result.data;
+
+          this.createHabito(habitos).then((result)=>{
+            if(result.status=='OK'){
+              idHabitos=result.data;
+
+              this.createExamenSegmetario(examenS).then((result)=>{
+                if(result.status=='OK'){
+                  idExamenS=result.data;
+
+                  this.createCitaMedicaT(idHistoriaClinica, fecha, motivo, epsAgenda,idMedico,idExamenFisico,idHabitos,idExamenS).then((result)=>{
+                    if(result.status=='OK'){
+                      resolve({status : 'OK', message : 'Cita medica creada exitosamente'});
+                    }else{resolve(response);}
+                  }).catch((err)=>{
+                    reject(err);
+                  });
+
+                }else{resolve(response);}
+              }).catch((err)=>{
+                reject(err);
+              });
+            }else{resolve(response);}
+          }).catch((err)=>{
+            reject(err);
+          });
+        }else{resolve(response);}
+      }).catch((err)=>{
+        reject(err);
+      });
+    });
+  },
+
+  createCitaMedicaT : function(idHistoriaClinica, fecha, motivo, epsAgenda,idMedico,examenFisico,habitos,examenS){
+    return new Promise((resolve, reject)=>{
+      let queryString = "call insertCitas_Medicas(?,?,?,?,?,?,?,?)";
+      let query = connection.query(queryString, [fecha, motivo, epsAgenda,idMedico,examenFisico,habitos,examenS,idHistoriaClinica], (err, result)=>{
+          response = {status : 'DECLINED', message : 'ERROR al crear Cita medica'};
+          if(err){
+            reject(err);
+          } else{
+            response = {status : 'DECLINED', message : 'Cita ya existe'}
+            let queryStatus = result[0][0]['LA CITA MEDICA HA SIDO CREADA CON EXITO'];
+            if(queryStatus!=undefined){
+              response = {status : 'OK', message : 'Cita medica creada exitosamente'}
+            }
+            resolve(response);
+          }
+      });
+    });
+  },
+
+
+
+  // Jhoan
+  getMedicamentos : function(){
+    return new Promise((resolve, reject)=>{
+      let queryString = "call getMedicamentos"
+      let query = connection.query(queryString, (err, result)=>{
+        if(err){
+          reject(err);
+        } else{
+          let queryStatus = result[0][0];
+          if(queryStatus['NO HAY MEDICAMENTOS']==undefined){
+              resolve({
+                status : 'OK',
+                data : result[0]
+              });
+          }
+          resolve({
+            status : 'ERROR',
+            message : 'No hay medicamentos registrados'
+          });
+        }
+      });
+    });
+  },
+  getMedicamentoByID : function(idMed){
+    return new Promise((resolve, reject)=>{
+      let queryString = "call getMedicamentosForId(?)"
+      let query = connection.query(queryString, [idMed], (err, result)=>{
+        if(err){
+          reject(err);
+        } else{
+          let queryStatus = result[0][0];
+          if(queryStatus['NO EXISTE EL MEDICAMENTO']==undefined){
+              resolve({
+                status : 'OK',
+                data : result[0][00]              });
+          }
+          resolve({
+            status : 'ERROR',
+            message : 'No existe el medicamento'
+          });
+        }
+      });
+    });
+  },
+  createMedicamento : function(nombre, gramaje){
+      return new Promise((resolve, reject) => {
+        let queryString = 'call insertMedicamentos(?, ?)';
+        let query = connection.query(queryString, [nombre, gramaje], (err, result)=>{
+            response = {status:'DECLINED', message : 'Medicamento no creado'}
+            if(err){
+              reject(err);
+            } else{
+              queryStatus = result[0][0]['LA MEDICACION X TRATAMIENTO HA SIDO CREADA CON EXITO'];
+              if(queryStatus!=undefined){
+                response = {status : 'OK',
+                message : 'Medicamento creado con exito'
+                };
+              } else {
+                response = {status : 'DECLINED',
+                message : 'Los datos de medicamento ya existen'};
+              }
+              resolve(response);
+            }
+          });
+      });
+  },
+  addMedicamentoxTratamiento : function(idMed, idTrat, rep){
+    return new Promise((resolve, reject)=>{
+      let queryString = "call insertMedXTrata(?,?,?)";
+      let query = connection.query(queryString, [idMed,idTrat,rep], (err, result)=>{
+          response = {status : 'DECLINED', message : 'ERROR al agregar MedicamentoxTratamiento'};
+          if(err){
+            reject(err);
+          } else{
+            response = {status : 'DECLINED', message : 'MedicamentoxTratamiento ya agregado'}
+            let queryStatus = result[0][0]['LA MEDICACION X TRATAMIENTO HA SIDO CREADA CON EXITO'];
+            if(queryStatus!=undefined){
+              response = {status : 'OK', message : 'MedicamentoxTratamiento creado exitosamente'}
+            }
+            resolve(response);
+          }
+      });
+    });
+  },
+  getExamenesByDiagnostico : function(idDiag){
+    return new Promise((resolve, reject)=>{
+      let examenes = undefined;
+      let queryString = "call getExamenesForIdDiagnostico(?)"
+      let query = connection.query(queryString, [idDiag], (err, result)=>{
+        if(err){
+          reject(err);
+        } else{
+          response = {status : 'DECLINED', message : 'ERROR al agregar Tipo examen'};
+          let queryStatus = result[0][0];
+          if(queryStatus['NO EXISTEN LOS EXAMENES']==undefined){
+            examenes = result;
+            for(var i=0; i<result.length; i++){
+              let id = result[i]['idExamen'];
+              this.getExamenesById(id).then((res)=>{
+                if(res.status=='OK'){
+                  examenes[i]['nombre'] = res.nombre;
+                } else {
+                  resolve(response);
+                }
+              }).catch((err)=>{
+                reject(err);
+              });
+            }
+            resolve({
+              status : 'OK',
+              data : examenes[0]
+            });
+          }
+          resolve(response);
+        }
+      });
+    });
+  },
+  getCitaMedicaByID : function(idCitaMed){
+    let examen_fisico = undefined;
+    let Habitos = undefined;
+    let examen_seg = undefined;
+    let medico = undefined;
+    let Diagnosticos = undefined;
+    return new Promise((resolve, reject)=>{
+      let queryString = "call get_Citas_Medicas_ForId(?)";
+      let query = connection.query(queryString, [idCitaMed], (err, result)=>{
+        if(err){
+          reject(err);
+        } else {
+          let response = {status : 'DECLINED', message : 'Cita medica no existe'};
+          let queryStatus = result[0][0];
+          if(queryStatus['NO EXISTE LA CITA MEDICA']==undefined){
+            let id = queryStatus['idConsulta'];
+            let DNI_Med = queryStatus['idMedicos'];
+            let id_examen_fis = queryStatus['idExamen'];
+            let id_habito = queryStatus['idHabito'];
+            let id_examen_seg = queryStatus['idExamenSeg'];
+
+            this.getMedicoByDNI(DNI_Med).then((result)=>{
+              if(result.status=='OK'){
+                medico = result.data;
+
+                this.getExamenFisicoById(id_examen_fis).then((result)=>{
+                  if(result.status=='OK'){
+                    examen_fisico = result.data;
+
+                    this.getHabitoById(id_habito).then((result)=>{
+                      if(result.status=='OK'){
+                        Habitos = result.data;
+
+                        this.getExamenSegmentarioById(id_examen_seg).then((result)=>{
+                          if(result.status=='OK'){
+                            examen_seg = result.data;
+
+                            this.getDiagnosticosById(id).then((result)=>{
+                              if(result.status=='OK'){
+                                Diagnosticos = result.data;
+                                resolve({
+                                  status : 'OK',
+                                  data : {
+                                    fecha : queryStatus['Fecha'],
+                                    motivo : queryStatus['Motivo'],
+                                    epsAgenda : queryStatus['agenda'],
+                                    medico : medico['Nombre Medico'],
+                                    examenFisico : examen_fisico,
+                                    habitos : Habitos,
+                                    examenSegmentario : examen_seg,
+                                    diagnosticos : Diagnosticos
+                                  }
+                                });
+                              } else {
+                                resolve({
+                                  status : 'DECLINED',
+                                  message : 'No se encontraron diagnosticos'
+                                });
+                              }
+                            }).catch((err)=>{
+                              reject(err);
+                            });
+
+                          } else {
+                            resolve({
+                              status : 'DECLINED',
+                              message : 'No existe el examen segmentario'
+                            });
+                          }
+                        }).catch((err)=>{
+                          reject(err);
+                        });
+
+                      } else {
+                        resolve({status : 'DECLINED', message : 'No existe el habito'});
+                      }
+                    }).catch((err)=>{
+                      reject(err);
+                    });
+
+                  } else {
+                    resolve({status : 'DECLINED', message : 'No existe el examen fisico'});
+                  }
+                }).catch((err)=>{
+                  reject(err);
+                });
+
+              } else {
+                resolve({status : 'DECLINED', message : 'No existe el medico'});
+              }
+            }).catch((err)=>{
+              reject(err);
+            });
+          }
+        }
+      });
+    });
+  },
   closeConnection : function(){
     return connection.end();
   }

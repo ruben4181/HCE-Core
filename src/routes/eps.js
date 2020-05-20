@@ -396,12 +396,12 @@ app.post('/eps/createCita', (req, res)=>{
   let examenFisico = reqBody.examenFisico;
   let habitos = reqBody.habitos;
   let examenSegmentario = reqBody.examenSegmentario;
-  let idEntidad = reqBody.idEntidad || 1;
-  let DNIMedico = reqBody.DNIMedico || 1;
+  //let idEntidad = reqBody.idEntidad || 1;
+  //let DNIMedico = reqBody.DNIMedico || 1;
   dbServices.createCitaMedica(idHistoriaClinica, fecha, motivo, epsAgenda,idMedico,examenFisico,habitos,examenSegmentario)
   .then((response)=>{
       res.status(200);
-      dbServices.addLog(idEntidad, DNIMedico, "Crea cita medica["+idHistoriaClinica.toString()+"] ->"+JSON.stringify(reqBody));
+      //dbServices.addLog(idEntidad, DNIMedico, "Crea cita medica["+idHistoriaClinica.toString()+"] ->"+JSON.stringify(reqBody));
       res.send(response);
     }).catch((err)=>{
       res.status(500);

@@ -1,6 +1,16 @@
 var connection = require('./connection');
 
 module.exports = {
+  addLog : function(idEntidad, DNIMedico, description){
+    let queryString = "call insertLog(?, ?, ?)";
+    let query = connection.query(queryString, [idEntidad, DNIMedico, description], (err, result)=>{
+      if(err):{
+        console.log('No se guardó el log');
+      } else : {
+        console.log('Se guardó el log');
+      }
+    });
+  },
   createUser : function(DNI, nombre, fechaNacimiento, estadoCivil, telefono, sexo){
     //Tenemos que retornar una promesa, porque el acceso a la base de datos
     //Es asincrono

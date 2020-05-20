@@ -35,6 +35,8 @@ app.post('/eps/createUser', (req, res)=>{
   //Obteniendo los datos del JSON que nos envian
   let reqBody = req.body;
   let DNI = reqBody.DNI;
+  let idEntidad = reqBody.idEntidad;
+  let DNIMedico = reqBody.DNIMedico;
   let nombre = reqBody.nombre;
   let fechaNacimiento = reqBody.fechaNacimiento;
   let estadoCivil = reqBody.estadoCivil;
@@ -58,6 +60,7 @@ app.post('/eps/createUser', (req, res)=>{
     estadoCivil, telefono, sexo).then((response)=>{
       res.status(200);
       res.send(response);
+      dbServices.addLog(idEntidad, DNIMedico, "Crea paciente ->"+JSON.stringify(reqBody));
     }).catch((err)=>{
       res.status(500);
       res.send({

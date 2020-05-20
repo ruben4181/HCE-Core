@@ -1001,7 +1001,7 @@ module.exports = {
       var idHabitos=0;
       var idExamenS=0;
       response = {status : 'DECLINED', message : 'Error al crear cita medica'};
-      console.log(99);
+      console.log(99, 'Entrando a agregar cita medica');
       this.createExamenFisico(examenFisico).then((result)=>{
         if(result.status=='OK'){
           idExamenFisico=result.data;

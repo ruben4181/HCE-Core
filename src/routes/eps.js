@@ -384,7 +384,6 @@ app.post('/eps/createCita', (req, res)=>{
   }).catch((err)=>{
     console.log("Error buscando HC");
     res.status(500);
-    res.send({status: 'ERROR', message : 'Historia clinica de paciente no existe'});
   })
   dbServices.createCitaMedica(idHistoriaClinica, fecha, motivo, epsAgenda,idMedico,examenFisico,habitos,examenSegmentario)
   .then((response)=>{

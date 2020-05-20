@@ -379,6 +379,13 @@ app.post('/eps/createCita', (req, res)=>{
   let examenFisico = reqBody.examenFisico;
   let habitos = reqBody.habitos;
   let examenSegmentario = reqBody.examenSegmentario;
+  dbServices.getHCForDNI(idHistoriaClinica).then((resp)=>{
+    console.log(idHistoriaClinica=resp.id);
+  }).catch((err)=>{
+    console.log("Error buscando HC");
+    res.status(500);
+    res.send({status: 'ERROR', message : 'Historia clinica de paciente no existe'});
+  })
   dbServices.createCitaMedica(idHistoriaClinica, fecha, motivo, epsAgenda,idMedico,examenFisico,habitos,examenSegmentario)
   .then((response)=>{
       res.status(200);

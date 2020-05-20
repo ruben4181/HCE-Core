@@ -213,7 +213,7 @@ module.exports = {
           let queryStatus=result[0][0];
           if(queryStatus['NO EXISTE UNA HISTORIA CLINICA ASOCIADA CON ESE ID']==undefined){
               queryString = "call getAntecedenteForId(?)";
-              let id = queryStatus.idHistoria;
+              let id = queryStatus["Id Historia Clinica"];
               let idAntecedente = queryStatus['Id Antecedente'];
               let idFisiologica = queryStatus['Id Fisiologica'];
               let query = connection.query(queryString, [idAntecedente], (err, result)=>{

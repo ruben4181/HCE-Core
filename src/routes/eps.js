@@ -380,7 +380,7 @@ app.post('/eps/createCita', (req, res)=>{
   let habitos = reqBody.habitos;
   let examenSegmentario = reqBody.examenSegmentario;
   dbServices.getHCForDNI(idHistoriaClinica).then((resp)=>{
-    console.log(idHistoriaClinica=resp.id);
+    console.log("RESP: ", resp);
   }).catch((err)=>{
     console.log("Error buscando HC");
     res.status(500);

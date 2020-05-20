@@ -682,40 +682,12 @@ module.exports = {
       this.getExamenById(ID).then((result)=>{
         if(result.status=='OK'){
           let examen = result.data;
-          this.getTipoExamenById(examen["Id Tipo de examen"]).then((result)=>{
+          this.getTipoExamenById(examen.idTipoExamen).then((result)=>{
             if(result.status=='OK'){
-              let nombreExamen = result.data["Nombre de tipo de examen"];
+              examen["nombre"] = result.data['Nombre de tipo de examen'];
               resolve({
                 status : 'OK',
-                data : {exam : examen, nombre : nombreExamen}
-              });
-            }else{
-              resolve(response);
-            }
-          }).catch((err)=>{
-            reject(err);
-          });
-        }else{
-          resolve(response);
-        }
-      }).catch((err)=>{
-        reject(err);
-      });
-    });
-  },
-
-  getTratamientoMById : function(ID){
-    return new Promise((resolve, reject)=>{
-      response = {status : 'DECLINED', message : 'tratamiento no existe'};
-      this.getTratamientoById(ID).then((result)=>{
-        if(result.status=='OK'){
-          let tratamientot = result.data;
-          this.getMedicamentosByIdTratamiento(ID).then((result)=>{
-            if(result.status=='OK'){
-              let medicamentost = result.data;
-              resolve({
-                status : 'OK',
-                data : {tratamiento : tratamientot, medicamentos : medicamentost}
+                data : examen
               });
             }else{
               resolve(response);
@@ -760,7 +732,7 @@ module.exports = {
       response = {status : 'DECLINED', message : 'tratamiento no existe'};
       this.getTratamientoById(ID).then((result)=>{
         if(result.status=='OK'){
-          let tratamientot = result.data;
+          let tratamientot = {concepto:result.data.Concepto};
           this.getMedicamentosByIdTratamiento(ID).then((result)=>{
             if(result.status=='OK'){
               let medicamentost = result.data;
@@ -795,7 +767,7 @@ module.exports = {
           if(queryStatus['NO HAY TRATAMIENTOS PARA ESE DIAGNOSTICO']==undefined){
               resolve({
                 status : 'OK',
-                data : result
+                data : result[0]
               });
           }
           resolve({
@@ -816,15 +788,66 @@ module.exports = {
           this.getTratamientoByIdDiagnostico(ID).then((result)=>{
             if(result.status=='OK'){
               let tratamientost = result.data;
+              for (let i = 0; i < tratamientost.length; i++) {
+                this.getTratamientoMById(tratamientost[i]["Id tratamiento"]).then((result)=>{
+                  if(result.status=='OK'){
+                    tratamientost[i] = result.data;
+                    if(i == tratamientost.length - 1){
+                      resolve({
+                        status : 'OK',
+                        data : {diagnostico : diagnosticot, tratamientos : tratamientost}
+                      });
+                    }
+                  } else if(result.status == 'ERROR' ||result.status == 'DECLINED' && i == tratamientost.length - 1){
+                    tratamientost.pop();
+                    resolve({
+                      status : 'OK',
+                      data : {diagnostico : diagnosticot, tratamientos : tratamientost}
+                    });
+                  } else {
+                    resolve(response);
+                  }
+                }).catch((err)=>{
+                  reject(err);
+                });
+              }
+            }else{
+              resolve(response);
+            }
+          }).catch((err)=>{
+            reject(err);
+          });
+        }else{
+          resolve(response);
+        }
+      }).catch((err)=>{
+        reject(err);
+      });
+    });
+  },
+
+/*
+  getDiagnosticoConTratamientosById : function(ID){
+    return new Promise((resolve, reject)=>{
+      response = {status : 'DECLINED', message : 'diagnostico no existe'};
+      this.getDiagnosticoById(ID).then((result)=>{
+        if(result.status=='OK'){
+          let diagnosticot = result.data;
+          this.getTratamientoByIdDiagnostico(ID).then((result)=>{
+            if(result.status=='OK'){
+              let tratamientost = result.data;
               this.getTratamientoByIdDiagnostico(ID).then((result)=>{
                 if(result.status=='OK'){
                   var tratamientost = result.data;
-                  var i;
-                  for (i = 0; i < tratamientost.length; i++) {
+                  for (let i = 0; i < tratamientost.length; i++) {
                     this.getTratamientoMById(tratamientost[i]["Id tratamiento"]).then((result)=>{
                       if(result.status=='OK'){
-
                         tratamientost[i] = result.data;
+                        console.log(result.data);
+                        resolve({
+                          status : 'OK',
+                          data : {diagnostico : diagnosticot, tratamientos : tratamientost[0]}
+                        });
                       }else{
                         resolve(response);
                       }
@@ -832,10 +855,6 @@ module.exports = {
                       reject(err);
                     });
                   }
-                  resolve({
-                    status : 'OK',
-                    data : {diagnostico : diagnosticot, tratamientos : tratamientost[0]}
-                  });
                 }else{
                   resolve(response);
                 }
@@ -855,7 +874,7 @@ module.exports = {
         reject(err);
       });
     });
-  },
+  },*/
 
   getDiagnosticosById : function(ID){
     return new Promise((resolve, reject)=>{
@@ -864,10 +883,11 @@ module.exports = {
       this.getDiagnosticosByIdCita(ID).then((result)=>{
         if(result.status=='OK'){
           diagnosticost = result.data;
-          for (i = 0; i < diagnosticost.length; i++) {
-            this.getDiagnosticoConTratamientosById(diagnosticost[i]["idDiagnostico"]).then((result)=>{
+          for (let i = 0; i < diagnosticost.length; i++) {
+            this.getDiagnosticoConTratamientosById(diagnosticost[i]["Id Diagnostico"]).then((result)=>{
               if(result.status=='OK'){
                 diagnosticost[i] = result.data;
+                console.log(result.data);
                 this.getExamenesByDiagnostico(diagnosticost[i].diagnostico["idDiagnostico"]).then((result)=>{
                   if(result.status=='OK'){
                     diagnosticost[i]={
@@ -875,6 +895,8 @@ module.exports = {
                       diagnostico  : diagnosticost[i].diagnostico,
                       tratamientos : diagnosticost[i].tratamientos
                     };
+                    console.log(i);
+                    console.log(diagnosticost[i]);
                     if(i == diagnosticost.length - 1){
                       resolve({
                         status : 'OK',
@@ -1057,7 +1079,7 @@ module.exports = {
           if(queryStatus['NO EXISTE EL MEDICAMENTO']==undefined){
               resolve({
                 status : 'OK',
-                data : result[0][00]              });
+                data : result[0][0]});
           }
           resolve({
             status : 'ERROR',
@@ -1107,6 +1129,31 @@ module.exports = {
       });
     });
   },
+
+  getExamenById : function(Id){
+    return new Promise((resolve, reject)=>{
+      let queryString = "call getExamenForId(?)";
+      let query = connection.query(queryString, [Id], (err, result)=>{
+        if(err){
+          reject(err);
+        } else{
+          queryStatus = result[0][0];
+          if(queryStatus['NO EXISTE EL EXAMEN']==undefined){
+              resolve({
+                status : 'OK',
+                data : result[0][0]
+              });
+          }
+          resolve({
+            status : 'ERROR',
+            message : 'examen no existe'
+          });
+        }
+      });
+
+    });
+  },
+
   getExamenesByDiagnostico : function(idDiag){
     return new Promise((resolve, reject)=>{
       let examenes = undefined;
@@ -1118,12 +1165,18 @@ module.exports = {
           response = {status : 'DECLINED', message : 'ERROR al agregar Tipo examen'};
           let queryStatus = result[0][0];
           if(queryStatus['NO EXISTEN LOS EXAMENES']==undefined){
-            examenes = result;
-            for(var i=0; i<result.length; i++){
-              let id = result[i]['idExamen'];
+            examenes = result[0];
+            for(let i=0; i<examenes.length; i++){
+              let id = examenes[i]['Id Examen'];
               this.getExamenesById(id).then((res)=>{
                 if(res.status=='OK'){
-                  examenes[i]['nombre'] = res.nombre;
+                  examenes[i] = res.data;
+                  if(i==examenes.length-1){
+                    resolve({
+                      status : 'OK',
+                      data : examenes
+                    });
+                  }
                 } else {
                   resolve(response);
                 }
@@ -1131,12 +1184,7 @@ module.exports = {
                 reject(err);
               });
             }
-            resolve({
-              status : 'OK',
-              data : examenes[0]
-            });
-          }
-          resolve(response);
+          } else {resolve(response);}
         }
       });
     });

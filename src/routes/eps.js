@@ -391,7 +391,6 @@ app.post('/eps/createCita', (req, res)=>{
       res.send(response);
     }).catch((err)=>{
       res.status(500);
-      console.log(err);
       res.send({
         status : 'ERROR',
         message : 'Ha ocurrido un error en el servidor, intente de nuevo mas tarde'

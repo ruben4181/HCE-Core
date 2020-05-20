@@ -380,22 +380,22 @@ app.post('/eps/createCita', (req, res)=>{
   let habitos = reqBody.habitos;
   let examenSegmentario = reqBody.examenSegmentario;
   dbServices.getHCForDNI(idHistoriaClinica).then((resp)=>{
-    console.log("RESP: ", resp);
+    idHistoriaClinica = resp.data.id;
+    dbServices.createCitaMedica(idHistoriaClinica, fecha, motivo, epsAgenda,idMedico,examenFisico,habitos,examenSegmentario)
+    .then((response)=>{
+        res.status(200);
+        res.send(response);
+      }).catch((err)=>{
+        res.status(500);
+        res.send({
+          status : 'ERROR',
+          message : 'Ha ocurrido un error en el servidor, intente de nuevo mas tarde'
+        });
+      });
   }).catch((err)=>{
     console.log("Error buscando HC");
     res.status(500);
   })
-  dbServices.createCitaMedica(idHistoriaClinica, fecha, motivo, epsAgenda,idMedico,examenFisico,habitos,examenSegmentario)
-  .then((response)=>{
-      res.status(200);
-      res.send(response);
-    }).catch((err)=>{
-      res.status(500);
-      res.send({
-        status : 'ERROR',
-        message : 'Ha ocurrido un error en el servidor, intente de nuevo mas tarde'
-      });
-    });
 });
 
 app.post('/eps/getCitas', (req, res)=>{

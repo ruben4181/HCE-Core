@@ -4,9 +4,9 @@ module.exports = {
   addLog : function(idEntidad, DNIMedico, description){
     let queryString = "call insertLog(?, ?, ?)";
     let query = connection.query(queryString, [idEntidad, DNIMedico, description], (err, result)=>{
-      if(err):{
+      if(err){
         console.log('No se guardó el log');
-      } else : {
+      } else{
         console.log('Se guardó el log');
       }
     });

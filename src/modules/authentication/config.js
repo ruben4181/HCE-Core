@@ -22,7 +22,7 @@ module.exports={
     '/eps/getCitaMedica:POST',
     '/eps/createCita:POST',
     '/eps/getCitas:POST'
-  ],
-  userEP : ['/users/index:GET', '/users/getPaciente:POST', '/users/getHC:POST'],
+    ],
+  userEP : ['/users/index:GET', '/users/getPaciente:POST', '/users/getHC:POST','/users/getCitaMedica','/users/getCitas'],
   exceptions : ['/eps/sign:POST', '/users/sign:POST']
 }

@@ -213,6 +213,7 @@ module.exports = {
           let queryStatus=result[0][0];
           if(queryStatus['NO EXISTE UNA HISTORIA CLINICA ASOCIADA CON ESE ID']==undefined){
               queryString = "call getAntecedenteForId(?)";
+              let id = queryStatus.idHistoria;
               let idAntecedente = queryStatus['Id Antecedente'];
               let idFisiologica = queryStatus['Id Fisiologica'];
               let query = connection.query(queryString, [idAntecedente], (err, result)=>{
@@ -232,7 +233,7 @@ module.exports = {
                         queryStatus = result[0][0];
                         if(queryStatus['NO EXISTE LA FISIOLOGICA']==undefined){
                           fisiologica = queryStatus;
-                          response = {status : 'OK', data : {antecedentes, fisiologica}};
+                          response = {status : 'OK', data : {id : id, antecedentes, fisiologica}};
 
                         }
                         resolve(response);
@@ -256,18 +257,18 @@ module.exports = {
 
   },
   //Brayan funcion
-  addExamenFisico : function(id, data){
+  createExamenFisico : function(e){
     return new Promise((resolve, reject)=>{
-      let queryString = "call insertExamen_Fisico(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-      let query = connection.query(queryString, [id, data.estadoConcienca, data.lenguaje, data.auditivo,
-        data.agudezaVisual, data.peso, data.estatura, data.facie, data.edadRealAparente,
-      data.temperatura, data.actitud], (err, result)=>{
+      let queryString = "call insertExamen_Fisico(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      let query = connection.query(queryString, [e.estadoConciencia, e.lenguaje, e.auditivo,
+        e.agudezaVisual, e.peso, e.estatura, e.facie, e.edadRealAparente,
+        e.temperatura, e.actitud], (err, result)=>{
         if(err){
           reject(err);
         } else{
           let queryStatus = result[0][0];
-          if(queryStatus['EL EXAMEN FISICO HA SIDO CREADO CON EXITO']){
-              return resolve({status : 'OK', message : 'Examen fisico creado con exito'});
+          if(queryStatus['EL EXAMEN FISICO HA SIDO CREADO CON EXITO']!=undefined){
+              return resolve({status : 'OK', message : 'Examen fisico creado con exito', data : result[0][0]["ID Examen"]});
           } else {
             return resolve({status : 'DECLINED', message : 'Examen fisico duplicado'});
           }
@@ -275,18 +276,18 @@ module.exports = {
       });
     });
   },
-  addHabito : function(id, data){
+  createHabito : function(h){
     return new Promise((resolve, reject)=>{
-      let queryString = "call insertHabito(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-      let query = connection.query(queryString, [id, data.alimentacion, data.apetito, data.sed,
-        data.diuresis, data.catarsisIntestinal, data.sueno, data.relacionesSexuales, data.alcohol,
-        data.tabaco, data.drogas, data.medicacion], (err,result)=>{
+      let queryString = "call insertHabito(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      let query = connection.query(queryString, [h.alimentacion, h.apetito, h.sed,
+        h.diuresis, h.catarsisIntestinal, h.sueno, h.relacionesSexuales, h.alcohol,
+        h.tabaco, h.drogas, h.medicacion], (err,result)=>{
         if(err){
           reject(err);
         }else{
           let queryStatus = result [0][0];
-          if(queryStatus['EL HABITO   HA SIDO CREADA CON EXITO']){
-            return resolve({status : 'OK', message :'Habito creado con exito'});
+          if(queryStatus['EL HABITO   HA SIDO CREADA CON EXITO']!=undefined){
+            return resolve({status : 'OK', message :'Habito creado con exito', data : result[0][0]["ID Habito"]});
           }else{
             return resolve({status : 'DECLINED', message :'Habito duplicado'});
           }
@@ -294,19 +295,19 @@ module.exports = {
       });
     });
   },
-  addExamenSegmetario : function(id, data){
+  createExamenSegmetario : function(s){
     return new Promise((resolve, reject)=>{
-      let queryString = "call insertExamenSegmentario(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-      let query = connection.query(queryString, [id, data.cabeza, data.cuello, data.torax,
-        data.aparatoCirculatorio, data.aparatoRespiratorio, data.abdomen, data.aparatoUrogenital,
-        data.sistemaNervioso, data.psicologicoMental, data.perine, data.examenGenital,
-        data.miembrosSuperiores, data.miembrosInferiores], (err,result)=>{
+      let queryString = "call insertExamenSegmentario(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      let query = connection.query(queryString, [s.cabeza, s.cuello, s.torax,
+        s.aparatoCirculatorio, s.aparatoRespiratorio, s.abdomen, s.aparatoUrogenital,
+        s.sistemaNervioso, s.psicologicoMental, s.perine, s.examenGenital,
+        s.miembrosSuperiores, s.miembrosInferiores], (err,result)=>{
         if(err){
           reject(err);
         }else{
           let queryStatus = result[0][0];
           if(queryStatus['EL EXAMEN SEGMENTARIO   HA SIDO CREADO CON EXITO']){
-            return resolve({status : 'OK', message :'Examen segmentario creado con exito'});
+            return resolve({status : 'OK', message :'Examen segmentario creado con exito', data : result[0][0]["ID Examen Segmentario"]});
           }else{
             return resolve({status : 'DECLINED', message :'Examen segmentario duplicado'});
           }
@@ -963,6 +964,7 @@ module.exports = {
       this.getHCForDNI(DNI).then((result)=>{
         if(result.status=='OK'){
           let queryString = "call get_Citas(?)";
+          console.log(result);
           let query = connection.query(queryString, [result.data.id], (err, result)=>{
             if(err){
               reject(err);
@@ -974,6 +976,7 @@ module.exports = {
                     data : result[0]
                   });
               }
+
               resolve({
                 status : 'ERROR',
                 message : 'No hay citas'
@@ -994,11 +997,11 @@ module.exports = {
 
   createCitaMedica : function(idHistoriaClinica, fecha, motivo, epsAgenda,idMedico,examenFisico,habitos,examenS){
     return new Promise((resolve, reject)=>{
-      var ok = 1;
       var idExamenFisico=0;
       var idHabitos=0;
       var idExamenS=0;
       response = {status : 'DECLINED', message : 'Error al crear cita medica'};
+      console.log(99);
       this.createExamenFisico(examenFisico).then((result)=>{
         if(result.status=='OK'){
           idExamenFisico=result.data;
@@ -1006,7 +1009,6 @@ module.exports = {
           this.createHabito(habitos).then((result)=>{
             if(result.status=='OK'){
               idHabitos=result.data;
-
               this.createExamenSegmetario(examenS).then((result)=>{
                 if(result.status=='OK'){
                   idExamenS=result.data;

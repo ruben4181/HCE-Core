@@ -35,11 +35,11 @@ app.post('/eps/createUser', (req, res)=>{
   //Obteniendo los datos del JSON que nos envian
   let reqBody = req.body;
   let DNI = reqBody.DNI;
-  let idEntidad = reqBody.idEntidad || 1;
-  let DNIMedico = reqBody.DNIMedico || 1;
   let nombre = reqBody.nombre;
   let fechaNacimiento = reqBody.fechaNacimiento;
   let estadoCivil = reqBody.estadoCivil;
+  let idEntidad = reqBody.idEntidad || 1;
+  let DNIMedico = reqBody.DNIMedico || 1;
   if(estadoCivil==1){
     estadoCivil="soltero"
   } else{
@@ -90,18 +90,15 @@ app.post('/eps/getPaciente', (req, res)=>{
   let DNI = reqBody.DNI;
   dbServices.getPacienteByDNI(DNI).then((result)=>{
     res.status(200);
-    let data = result.data;
-    let prettyData = {
-      identificacion : result.data["Identificación"],
-      nombrePaciente : result.data["Nombre Paciente"],
-      fechaNacimiento : result.data["fechaNacimiento"],
-      estadoCivil : result.data["Estado Civil"],
-      telefono : result.data["Telefono"],
-      sexo : result.data["Sexo"],
-      token : result.data["Token"]
-    }
-    result.data = prettyData;
-    res.send(result);
+    let response = {
+      DNI : result.data['Identificacion'],
+      nombreCliente : result.data['Nombre Paciente'],
+      fechaNacimiento : result.data['fechaNacimiento'],
+      estadoCivil : result.data['Estado Civil'],
+      telefono: result.data['Telefono'],
+      sexo : result.data['Sexo'],
+    };
+    res.send(response);
   }).catch((err)=>{
     res.status(500);
     res.send(err);
@@ -130,10 +127,10 @@ app.post('/eps/createHC', (req, res)=>{
                     res.status(200);
                     dbServices.addLog(idEntidad, DNIMedico, "Crea HC["+DNI.toString()+"] ->"+JSON.stringify(reqBody));
                   }
-                  res.send(result);
+                  res.send(response);
                 });
               }else{
-                res.status(200);
+                res.status(500); // estaba en 200, pero creo que debe retornar 500.
                 res.send(result);
               }
             }).catch((err)=>{
@@ -179,6 +176,7 @@ app.post('/eps/update/antecedentes', (req, res)=>{
   let DNI = reqBody.DNI;
   let DNIMedico = reqBody.DNIMedico || 1;
   let idEntidad = reqBody.idEntidad || 1;
+
   dbServices.updateAntecedentes(DNI, a.accidentes, a.antecedentesHereditarios,
       a.enfermedadesInfancia, a.intervencionesQuirurgicas, a.alergias,
       a.inmunizacion, DNIMedico).then((resp)=>{
@@ -199,36 +197,36 @@ app.post('/eps/getHC', (req, res)=>{
   let idEntidad = reqBody.idEntidad;
 
   dbServices.getHCForDNI(DNI).then((resp)=>{
-    let antecedentes = resp.data.antecedentes;
-    let fisiologica = resp.data.fisiologica;
-    let prettyAntecedentes = {
-      id : resp.data.antecedentes["Id Antecedente"],
-      accidentes : resp.data.antecedentes["Accidentes"],
-      enfermedadesInfancia : resp.data.antecedentes["Enfermedades Infancia"],
-      intervencionesQuirurgicas : resp.data.antecedentes["BIGINTervencion Quirurgicas"],
-      alergias : resp.data.antecedentes["Alergias"],
-      inmunizacion : resp.data.antecedentes["Inmunizacion"]
+    result = {
+      antecedentes : {
+        idAntecedente : resp.data.antecedentes['Id Antecedente'],
+        accidentes : resp.data.antecedentes['Accidentes'],
+        antecedentesHereditarios : resp.data.antecedentes['Antecedentes Hereditarios'],
+        enfermedadesInfancia : resp.data.antecedentes['Enfermedades Infancia'],
+        intervencionesQuirurgicas : resp.data.antecedentes['Intervencion Quirurgicas'],
+        alergias : resp.data.antecedentes['Alergias'],
+        inmunizacion : resp.data.antecedentes['Inmunizacion']
+      },
+      fisiologica : {
+        idFisiologica : resp.data.fisiologica['Id Fisiologica'],
+        lactancia : resp.data.fisiologica['Lactancia'],
+        iniciacionSexual : resp.data.fisiologica['Iniciacion Sexual'],
+        ginecoObstretico : resp.data.fisiologica['Gineco Obstretico'],
+        menarca : resp.data.fisiologica['Menarca'],
+        embarazos : resp.data.fisiologica['Embarazos'],
+        partos : resp.data.fisiologica['Partos'],
+        abortos : resp.data.fisiologica['Abortos']
+      }
     };
-    let prettyFisiologica = {
-      id : resp.data.fisiologica["Id Fisiologica"],
-      lactancia : resp.data.fisiologica["Lactancia"],
-      iniciacionSexual : resp.data.fisiologica["Iniciacion Sexual"],
-      ginecoObstretico : resp.data.fisiologica["Gineco Obstretico"],
-      menarca : resp.data.fisiologica["Menarca"],
-      embarazos : resp.data.fisiologica["Embarazos"],
-      partos : resp.data.fisiologica["Partos"],
-      abortos : resp.data.fisiologica["Abortos"]
-    }
-    resp.data.antecedentes = prettyAntecedentes;
-    resp.data.fisiologica = prettyFisiologica;
-    res.send(resp);
+    res.send(result);
   }).catch((err)=>{
     res.status(500);
     res.send(err);
   });
 });
 
-//Nicolas
+//Nicolas eps
+
 app.post('/eps/getMedicos', (req, res)=>{
   dbServices.getMedicos().then((resp)=>{
     res.status(200);
@@ -246,13 +244,10 @@ app.post('/eps/createMedico', (req, res)=>{
   let nombre = reqBody.nombre;
   let fechaNacimiento = reqBody.fechaNacimiento;
   let telefono = reqBody.telefono;
-  let idEntidad = reqBody.idEntidad || 1;
-  let DNIMedico = reqBody.DNIMedico || 1;
   dbServices.createMedico(DNI, nombre, fechaNacimiento, telefono)
   .then((response)=>{
       res.status(200);
       res.send(response);
-      dbServices.addLog(idEntidad, DNIMedico, "Crea Medico["+DNI.toString()+"] ->"+JSON.stringify(reqBody));
     }).catch((err)=>{
       res.status(500);
       res.send({
@@ -277,13 +272,10 @@ app.post('/eps/createTratamiento', (req, res)=>{
   let reqHeaders = req.headers;
   let reqBody = req.body;
   let concepto = reqBody.concepto;
-  let idEntidad = reqBody.idEntidad || 1;
-  let DNIMedico = reqBody.DNIMedico || 1;
   dbServices.createTratamiento(concepto)
   .then((response)=>{
       res.status(200);
       res.send(response);
-      dbServices.addLog(idEntidad, DNIMedico, "Crea tratamiento ->"+JSON.stringify(reqBody));
     }).catch((err)=>{
       res.status(500);
       res.send({
@@ -298,12 +290,9 @@ app.post('/eps/addTratamientoxdiagnostico', (req, res)=>{
   let reqBody = req.body;
   let idDiagnostico = reqBody.idDiagnostico;
   let idTratamiento = reqBody.idTratamiento;
-  let idEntidad = reqBody.idEntidad || 1;
-  let DNIMedico = reqBody.DNIMedico || 1;
   dbServices.addTratamientoxdiagnostico(idDiagnostico,idTratamiento)
   .then((response)=>{
       res.status(200);
-      dbServices.addLog(idEntidad, DNIMedico, "Agrega TratamientoxDiagnostico ->"+JSON.stringify(reqBody));
       res.send(response);
     }).catch((err)=>{
       res.status(500);
@@ -318,12 +307,9 @@ app.post('/eps/createDiagnostico', (req, res)=>{
   let reqBody = req.body;
   let diagnostico = reqBody.diagnostico;
   let idCita = reqBody.idCita;
-  let idEntidad = reqBody.idEntidad || 1;
-  let DNIMedico = reqBody.DNIMedico || 1;
   dbServices.createDiagnostico(diagnostico,idCita)
   .then((response)=>{
       res.status(200);
-      dbServices.addLog(idEntidad, DNIMedico, "Crea diagnostico["+idCita.toString()+"] ->"+JSON.stringify(reqBody));
       res.send(response);
     }).catch((err)=>{
       res.status(500);
@@ -369,13 +355,10 @@ app.post('/eps/createExamen', (req, res)=>{
   let anexo = reqBody.anexo;
   let idTipoExamen = reqBody.idTipoExamen;
   let idDiagnostico = reqBody.idDiagnostico;
-  let idEntidad = reqBody.idEntidad || 1;
-  let DNIMedico = reqBody.DNIMedico || 1;
   dbServices.createExamen(resumen,resultado,anexo,idTipoExamen,idDiagnostico)
   .then((response)=>{
       res.status(200);
       res.send(response);
-      dbServices.addLog(idEntidad, DNIMedico, "Crea examen["+idDiagnostico.toString()+"] ->"+JSON.stringify(reqBody));
     }).catch((err)=>{
       res.status(500);
       res.send({
@@ -396,12 +379,9 @@ app.post('/eps/createCita', (req, res)=>{
   let examenFisico = reqBody.examenFisico;
   let habitos = reqBody.habitos;
   let examenSegmentario = reqBody.examenSegmentario;
-  //let idEntidad = reqBody.idEntidad || 1;
-  //let DNIMedico = reqBody.DNIMedico || 1;
   dbServices.createCitaMedica(idHistoriaClinica, fecha, motivo, epsAgenda,idMedico,examenFisico,habitos,examenSegmentario)
   .then((response)=>{
       res.status(200);
-      //dbServices.addLog(idEntidad, DNIMedico, "Crea cita medica["+idHistoriaClinica.toString()+"] ->"+JSON.stringify(reqBody));
       res.send(response);
     }).catch((err)=>{
       res.status(500);

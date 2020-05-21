@@ -1237,7 +1237,7 @@ module.exports = {
                         this.getExamenSegmentarioById(id_examen_seg).then((result)=>{
                           if(result.status=='OK'){
                             examen_seg = result.data;
-
+                            console.log("ID Diagnostico", id);
                             this.getDiagnosticosById(id).then((result)=>{
                               if(result.status=='OK'){
                                 Diagnosticos = result.data;

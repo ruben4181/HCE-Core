@@ -61,6 +61,29 @@ app.post('/users/getHC', (req, res)=>{
   let reqBody = req.body;
   let DNI = reqBody.DNI;
   dbServices.getHCForDNI(DNI).then((resp)=>{
+    let antecedentes = resp.data.antecedentes;
+    let fisiologica = resp.data.fisiologica;
+    let prettyAntecedentes = {
+      idAntecedente : resp.data.antecedentes["Id Antecedente"],
+      accidentes : resp.data.antecedentes["Accidentes"],
+      antecedentesHereditarios : resp.data.antecedentes["Antecedentes Hereditarios"],
+      enfermedadesInfancia : resp.data.antecedentes["Enfermedades Infancia"],
+      intervencionesQuirurgicas : resp.data.antecedentes["Intervencion Quirurgicas"],
+      alergias : resp.data.antecedentes["Alergias"],
+      inmunizacion : resp.data.antecedentes["Inmunizacion"]
+    };
+    let prettyFisiologica = {
+      idFisiologica : resp.data.fisiologica["Id Fisiologica"],
+      lactancia : resp.data.fisiologica["Lactancia"],
+      iniciacionSexual : resp.data.fisiologica["Iniciacion Sexual"],
+      ginecoObstretico : resp.data.fisiologica["Gineco Obstretico"],
+      menarca : resp.data.fisiologica["Menarca"],
+      embarazos : resp.data.fisiologica["Embarazos"],
+      partos : resp.data.fisiologica["Partos"],
+      abortos : resp.data.fisiologica["Abortos"]
+    }
+    resp.data.antecedentes = prettyAntecedentes;
+    resp.data.fisiologica = prettyFisiologica;
     res.send(resp);
   }).catch((err)=>{
     res.status(500);

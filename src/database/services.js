@@ -821,7 +821,10 @@ module.exports = {
                       data : {diagnostico : diagnosticot, tratamientos : tratamientost}
                     });
                   } else {
-                    resolve(response);
+                    resolve({
+                      status : 'OK',
+                      data : {diagnostico : diagnosticot, tratamientos : []}
+                    });
                   }
                 }).catch((err)=>{
                   reject(err);

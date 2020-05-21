@@ -570,7 +570,6 @@ module.exports = {
       let queryString = "call getDiagnosticoForId(?)";
       let query = connection.query(queryString, [ID], (err, result)=>{
         if(err){
-          console.log(err);
           reject(err);
         } else{
           queryStatus = result[0][0];
@@ -840,7 +839,6 @@ module.exports = {
           resolve(response);
         }
       }).catch((err)=>{
-        console.log("tratamientos error", err);
         reject(err);
       });
     });
@@ -903,7 +901,6 @@ module.exports = {
       this.getDiagnosticosByIdCita(ID).then((result)=>{
         if(result.status=='OK'){
           diagnosticost = result.data;
-          console.log(diagnosticost);
           for (let i = 0; i < diagnosticost.length; i++) {
             this.getDiagnosticoConTratamientosById(diagnosticost[i]["Id Diagnostico"]).then((result)=>{
               if(result.status=='OK'){
@@ -1256,7 +1253,6 @@ module.exports = {
                           if(result.status=='OK'){
                             examen_seg = result.data;
                             this.getDiagnosticosById(id).then((result)=>{
-                              console.log("Un result", result);
                               if(result.status=='OK'){
                                 Diagnosticos = result.data;
                                 resolve({
@@ -1287,7 +1283,6 @@ module.exports = {
                                 });
                               }
                             }).catch((err)=>{
-                              console.log("Un error", err);
                               resolve({
                                 status : 'OK',
                                 data : {

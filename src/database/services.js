@@ -906,6 +906,7 @@ module.exports = {
           console.log(diagnosticost);
           for (let i = 0; i < diagnosticost.length; i++) {
             this.getDiagnosticoConTratamientosById(diagnosticost[i]["Id Diagnostico"]).then((result)=>{
+              let diagnosticoString = diagnosticot[i]["Diagnostico"]
               if(result.status=='OK'){
                 diagnosticost[i] = result.data;
                 this.getExamenesByDiagnostico(diagnosticost[i].diagnostico["idDiagnostico"]).then((result)=>{
@@ -931,7 +932,7 @@ module.exports = {
                 resolve({
                   status : 'OK',
                   data : {
-
+                    diagnostico : diagnosticoString
                   }
                 });
               }

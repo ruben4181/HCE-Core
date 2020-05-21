@@ -801,6 +801,7 @@ module.exports = {
           let diagnosticot = result.data;
           this.getTratamientoByIdDiagnostico(idDiagnostico).then((result)=>{
             if(result.status=='OK'){
+              console.log("tratamientos ", result.data);
               let tratamientost = result.data;
               for (let i = 0; i < tratamientost.length; i++) {
                 this.getTratamientoMById(tratamientost[i]["Id tratamiento"]).then((result)=>{

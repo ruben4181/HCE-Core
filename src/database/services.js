@@ -837,6 +837,7 @@ module.exports = {
           resolve(response);
         }
       }).catch((err)=>{
+        console.log("tratamientos error", err);
         reject(err);
       });
     });

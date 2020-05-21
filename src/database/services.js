@@ -797,6 +797,7 @@ module.exports = {
     return new Promise((resolve, reject)=>{
       response = {status : 'DECLINED', message : 'diagnostico no existe'};
       this.getDiagnosticoById(ID).then((result)=>{
+        console.log("DIAGNOSTICO ID", result);
         if(result.status=='OK'){
           let diagnosticot = result.data;
           this.getTratamientoByIdDiagnostico(ID).then((result)=>{

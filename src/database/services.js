@@ -797,12 +797,11 @@ module.exports = {
           let diagnosticot = result.data;
           let idDiagnostico = diagnosticot.idDiagnostico;
           this.getTratamientoByIdDiagnostico(idDiagnostico).then((result)=>{
-            console.log("This result",result);
             if(result.status=='OK'){
-
               let tratamientost = result.data;
               for (let i = 0; i < tratamientost.length; i++) {
                 this.getTratamientoMById(tratamientost[i]["Id tratamiento"]).then((result)=>{
+                  console.log("THIS 2 RESULT", result);
                   if(result.status=='OK'){
                     tratamientost[i] = result.data;
                     if(i == tratamientost.length - 1){

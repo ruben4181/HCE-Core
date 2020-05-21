@@ -800,6 +800,7 @@ module.exports = {
         console.log("tratamientos ", ID, "cc", result);
         if(result.status=='OK'){
           let diagnosticot = result.data;
+          console.log("DIAGNOSTICOS T", diagnosticot);
           this.getTratamientoByIdDiagnostico(idDiagnostico).then((result)=>{
             if(result.status=='OK'){
 
@@ -900,7 +901,6 @@ module.exports = {
       this.getDiagnosticosByIdCita(ID).then((result)=>{
         if(result.status=='OK'){
           diagnosticost = result.data;
-          console.log(diagnosticost);
           for (let i = 0; i < diagnosticost.length; i++) {
             this.getDiagnosticoConTratamientosById(diagnosticost[i]["Id Diagnostico"]).then((result)=>{
               if(result.status=='OK'){

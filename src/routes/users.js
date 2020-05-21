@@ -43,7 +43,7 @@ app.post('/users/getPaciente', (req, res)=>{
     let data = result.data;
     let prettyData = {
       DNI : result.data["Identificación"],
-      nombrePaciente : result.data["Nombre Paciente"],
+      nombreCliente : result.data["Nombre Paciente"],
       fechaNacimiento : result.data["fechaNacimiento"],
       estadoCivil : result.data["Estado Civil"],
       telefono : result.data["Telefono"],

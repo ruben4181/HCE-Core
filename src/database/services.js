@@ -799,8 +799,7 @@ module.exports = {
       this.getDiagnosticoById(ID).then((result)=>{
         if(result.status=='OK'){
           let diagnosticot = result.data;
-          console.log("DIAGNOSTICO T", diagnosticot);
-          this.getTratamientoByIdDiagnostico(ID).then((result)=>{
+          this.getTratamientoByIdDiagnostico(idDiagnostico).then((result)=>{
             if(result.status=='OK'){
               let tratamientost = result.data;
               for (let i = 0; i < tratamientost.length; i++) {

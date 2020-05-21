@@ -40,6 +40,17 @@ app.post('/users/getPaciente', (req, res)=>{
   let DNI = reqBody.DNI;
   dbServices.getPacienteByDNI(DNI).then((result)=>{
     res.status(200);
+    let data = result.data;
+    let prettyData = {
+      identificacion : result.data["Identificación"],
+      nombrePaciente : result.data["Nombre Paciente"],
+      fechaNacimiento : result.data["fechaNacimiento"],
+      estadoCivil : result.data["Estado Civil"],
+      telefono : result.data["Telefono"],
+      sexo : result.data["Sexo"],
+      token : result.data["Token"]
+    }
+    result.data = prettyData;
     res.send(result);
   }).catch((err)=>{
     res.status(500);

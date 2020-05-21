@@ -1284,6 +1284,7 @@ module.exports = {
                                 });
                               }
                             }).catch((err)=>{
+                              console.log("Un error", err);
                               resolve({
                                 status : 'OK',
                                 data : {

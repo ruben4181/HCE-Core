@@ -578,7 +578,7 @@ module.exports = {
         } else{
           queryStatus = result[0][0];
           if(queryStatus["idDiagnostico"]!=undefined){
-              console.log(queryStatus["idDiagnostico"]);
+              console.log("Aqio esta" ,queryStatus["idDiagnostico"]);
               return resolve({
                 status : 'OK',
                 data : result[0][0]

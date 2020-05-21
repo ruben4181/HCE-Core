@@ -1239,6 +1239,7 @@ module.exports = {
                             examen_seg = result.data;
                             console.log("ID Diagnostico", id);
                             this.getDiagnosticosById(id).then((result)=>{
+                              console.log(result);
                               if(result.status=='OK'){
                                 Diagnosticos = result.data;
                                 resolve({

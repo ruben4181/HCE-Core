@@ -929,6 +929,7 @@ module.exports = {
                   reject(err);
                 });
               }else{
+                console.log("HERE");
                 resolve({
                   status : 'OK',
                   data : {
@@ -1252,7 +1253,7 @@ module.exports = {
                           if(result.status=='OK'){
                             examen_seg = result.data;
                             this.getDiagnosticosById(id).then((result)=>{
-                              console.log(result);
+                              console.log("Un result", result);
                               if(result.status=='OK'){
                                 Diagnosticos = result.data;
                                 resolve({

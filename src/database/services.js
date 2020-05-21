@@ -1256,8 +1256,16 @@ module.exports = {
                                 });
                               } else {
                                 resolve({
-                                  status : 'DECLINED',
-                                  message : 'No se encontraron diagnosticos'
+                                  status : 'OK',
+                                  data : {
+                                    fecha : queryStatus['Fecha'],
+                                    motivo : queryStatus['Motivo'],
+                                    epsAgenda : queryStatus['agenda'],
+                                    medico : medico['Nombre Medico'],
+                                    examenFisico : examen_fisico,
+                                    habitos : Habitos,
+                                    examenSegmentario : examen_seg
+                                  }
                                 });
                               }
                             }).catch((err)=>{

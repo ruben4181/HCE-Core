@@ -17,9 +17,7 @@ module.exports = {
     return new Promise((resolve, reject)=>{
       let queryString = "call insertPaciente(?, ?, ?, ?, ?, ?, ?)";
       let query = connection.query(queryString, [DNI, nombre, fechaNacimiento, estadoCivil, telefono, sexo, 'TOKEN'], function(err, result){
-          console.log("HERE");
           if(err){
-            console.log("Here");
             //Cuando ha ocurrido un error, lo 'lanzamos'
             //Y la tarea asincrona termine
             reject(err);
@@ -569,7 +567,6 @@ module.exports = {
 
   getDiagnosticoById : function(ID){
     return new Promise((resolve, reject)=>{
-      console.log("Llegó est ID: ", ID);
       let queryString = "call getDiagnosticoForId(?)";
       let query = connection.query(queryString, [ID], (err, result)=>{
         if(err){
@@ -578,7 +575,6 @@ module.exports = {
         } else{
           queryStatus = result[0][0];
           if(queryStatus["idDiagnostico"]!=undefined){
-              console.log("Aqio esta" ,queryStatus["idDiagnostico"]);
               return resolve({
                 status : 'OK',
                 data : result[0][0]
@@ -693,7 +689,6 @@ module.exports = {
   getExamenesById : function(ID){
     return new Promise((resolve, reject)=>{
       response = {status : 'DECLINED', message : 'Examen no existe'};
-      console.log("ID: ", ID);
       this.getExamenById(ID).then((result)=>{
         if(result.status=='OK'){
           let examen = result.data;
@@ -914,8 +909,6 @@ module.exports = {
                       diagnostico  : diagnosticost[i].diagnostico,
                       tratamientos : diagnosticost[i].tratamientos
                     };
-                    console.log(i);
-                    console.log(diagnosticost[i]);
                     if(i == diagnosticost.length - 1){
                       resolve({
                         status : 'OK',
@@ -1008,7 +1001,6 @@ module.exports = {
       var idHabitos=0;
       var idExamenS=0;
       response = {status : 'DECLINED', message : 'Error al crear cita medica'};
-      console.log(99, 'Entrando a agregar cita medica');
       this.createExamenFisico(examenFisico).then((result)=>{
         if(result.status=='OK'){
           idExamenFisico=result.data;
@@ -1248,7 +1240,6 @@ module.exports = {
                           if(result.status=='OK'){
                             examen_seg = result.data;
                             this.getDiagnosticosById(id).then((result)=>{
-                              console.log(result);
                               if(result.status=='OK'){
                                 Diagnosticos = result.data;
                                 resolve({

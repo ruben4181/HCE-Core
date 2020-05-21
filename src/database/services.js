@@ -803,6 +803,7 @@ module.exports = {
           let diagnosticot = result.data;
           let idDiagnostico = diagnosticot.idDiagnostico;
           this.getTratamientoByIdDiagnostico(idDiagnostico).then((result)=>{
+            console.log(result);
             if(result.status=='OK'){
 
               let tratamientost = result.data;
@@ -1185,7 +1186,6 @@ module.exports = {
           if(queryStatus['NO EXISTEN LOS EXAMENES']==undefined){
             examenes = result[0];
             for(let i=0; i<examenes.length; i++){
-              console.log(examenes);
               if(examenes[0]["NO EXISTE LOS EXAMENES"]!=undefined){
                 return resolve({status : 'OK', data : []});
               }

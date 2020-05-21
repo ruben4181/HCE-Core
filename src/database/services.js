@@ -573,11 +573,12 @@ module.exports = {
       let queryString = "call getDiagnosticoForId(?)";
       let query = connection.query(queryString, [ID], (err, result)=>{
         if(err){
+          console.log(err);
           reject(err);
         } else{
           queryStatus = result[0][0];
-          console.log(queryStatus["idDiagnostico"]);
           if(queryStatus["idDiagnostico"]!=undefined){
+              console.log(queryStatus["idDiagnostico"]);
               return resolve({
                 status : 'OK',
                 data : result[0][0]

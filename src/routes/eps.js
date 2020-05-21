@@ -298,6 +298,7 @@ app.post('/eps/addTratamientoxdiagnostico', (req, res)=>{
       res.status(200);
       res.send(response);
     }).catch((err)=>{
+      console.log(err);
       res.status(500);
       res.send({
         status : 'ERROR',

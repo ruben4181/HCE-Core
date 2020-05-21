@@ -797,9 +797,9 @@ module.exports = {
     return new Promise((resolve, reject)=>{
       response = {status : 'DECLINED', message : 'diagnostico no existe'};
       this.getDiagnosticoById(ID).then((result)=>{
-        console.log("DIAGNOSTICO ID", result);
         if(result.status=='OK'){
           let diagnosticot = result.data;
+          console.log("DIAGNOSTICO T", diagnosticot);
           this.getTratamientoByIdDiagnostico(ID).then((result)=>{
             if(result.status=='OK'){
               let tratamientost = result.data;
@@ -902,7 +902,6 @@ module.exports = {
             this.getDiagnosticoConTratamientosById(diagnosticost[i]["Id Diagnostico"]).then((result)=>{
               if(result.status=='OK'){
                 diagnosticost[i] = result.data;
-                console.log(result.data);
                 this.getExamenesByDiagnostico(diagnosticost[i].diagnostico["idDiagnostico"]).then((result)=>{
                   if(result.status=='OK'){
                     diagnosticost[i]={
@@ -968,7 +967,6 @@ module.exports = {
       this.getHCForDNI(DNI).then((result)=>{
         if(result.status=='OK'){
           let queryString = "call get_Citas(?)";
-          console.log(result);
           let query = connection.query(queryString, [result.data.id], (err, result)=>{
             if(err){
               reject(err);
@@ -1241,7 +1239,6 @@ module.exports = {
                         this.getExamenSegmentarioById(id_examen_seg).then((result)=>{
                           if(result.status=='OK'){
                             examen_seg = result.data;
-                            console.log("ID Diagnostico", id);
                             this.getDiagnosticosById(id).then((result)=>{
                               console.log(result);
                               if(result.status=='OK'){

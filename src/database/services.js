@@ -576,11 +576,11 @@ module.exports = {
           reject(err);
         } else{
           queryStatus = result[0][0];
-          console.log(queryStatus);
-          if(queryStatus.idDiagnostico!=undefined){
+          console.log(queryStatus["idDiagnostico"]);
+          if(queryStatus["idDiagnostico"]!=undefined){
               return resolve({
                 status : 'OK',
-                data : result[0]
+                data : result[0][0]
               });
           }
           resolve({

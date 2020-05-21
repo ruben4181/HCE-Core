@@ -739,7 +739,6 @@ module.exports = {
 
   getTratamientoMById : function(ID){
     return new Promise((resolve, reject)=>{
-      console.log("THIS ID TRATAMIENTO", ID);
       response = {status : 'DECLINED', message : 'tratamiento no existe'};
       this.getTratamientoById(ID).then((result)=>{
         if(result.status=='OK'){
@@ -807,7 +806,6 @@ module.exports = {
               let tratamientost = result.data;
               for (let i = 0; i < tratamientost.length; i++) {
                 this.getTratamientoMById(tratamientost[i]["Id tratamiento"]).then((result)=>{
-                  console.log("\n\nTHIS 2 RESULT", result, "\n\n");
                   if(result.status=='OK'){
                     tratamientost[i] = result.data;
                     if(i == tratamientost.length - 1){
@@ -1244,6 +1242,7 @@ module.exports = {
                           if(result.status=='OK'){
                             examen_seg = result.data;
                             this.getDiagnosticosById(id).then((result)=>{
+                              console.log(result);
                               if(result.status=='OK'){
                                 Diagnosticos = result.data;
                                 resolve({

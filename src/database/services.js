@@ -903,6 +903,7 @@ module.exports = {
       this.getDiagnosticosByIdCita(ID).then((result)=>{
         if(result.status=='OK'){
           diagnosticost = result.data;
+          console.log(diagnosticost);
           for (let i = 0; i < diagnosticost.length; i++) {
             this.getDiagnosticoConTratamientosById(diagnosticost[i]["Id Diagnostico"]).then((result)=>{
               if(result.status=='OK'){
@@ -927,7 +928,12 @@ module.exports = {
                   reject(err);
                 });
               }else{
-                resolve(response);
+                resolve({
+                  status : 'OK',
+                  data : {
+
+                  }
+                });
               }
             }).catch((err)=>{
               reject(err);

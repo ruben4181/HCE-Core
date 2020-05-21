@@ -1242,7 +1242,7 @@ module.exports = {
                           if(result.status=='OK'){
                             examen_seg = result.data;
                             this.getDiagnosticosById(id).then((result)=>{
-                              console.log(result);
+
                               if(result.status=='OK'){
                                 Diagnosticos = result.data;
                                 resolve({
@@ -1273,7 +1273,18 @@ module.exports = {
                                 });
                               }
                             }).catch((err)=>{
-                              reject(err);
+                              resolve({
+                                status : 'OK',
+                                data : {
+                                  fecha : queryStatus['Fecha'],
+                                  motivo : queryStatus['Motivo'],
+                                  epsAgenda : queryStatus['agenda'],
+                                  medico : medico['Nombre Medico'],
+                                  examenFisico : examen_fisico,
+                                  habitos : Habitos,
+                                  examenSegmentario : examen_seg
+                                }
+                              });
                             });
 
                           } else {

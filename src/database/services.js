@@ -897,10 +897,10 @@ module.exports = {
     return new Promise((resolve, reject)=>{
       var diagnosticost;
       response = {status : 'DECLINED', message : 'tratamiento no existe'};
-      console.log("Aqui pasa algo: ", ID);
       this.getDiagnosticosByIdCita(ID).then((result)=>{
         if(result.status=='OK'){
           diagnosticost = result.data;
+          console.log(diagnosticost);
           for (let i = 0; i < diagnosticost.length; i++) {
             this.getDiagnosticoConTratamientosById(diagnosticost[i]["Id Diagnostico"]).then((result)=>{
               if(result.status=='OK'){

@@ -575,8 +575,7 @@ module.exports = {
         if(err){
           reject(err);
         } else{
-          console.log(result[0]);
-          queryStatus = result[0];
+          queryStatus = result[0][0];
           if(queryStatus.idDiagnostico!=undefined){
               return resolve({
                 status : 'OK',

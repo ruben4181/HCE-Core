@@ -693,6 +693,7 @@ module.exports = {
   getExamenesById : function(ID){
     return new Promise((resolve, reject)=>{
       response = {status : 'DECLINED', message : 'Examen no existe'};
+      console.log("ID: ", ID);
       this.getExamenById(ID).then((result)=>{
         if(result.status=='OK'){
           let examen = result.data;

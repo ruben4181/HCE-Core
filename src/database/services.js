@@ -569,6 +569,7 @@ module.exports = {
 
   getDiagnosticoById : function(ID){
     return new Promise((resolve, reject)=>{
+      console.log("Llegó est ID: ", ID);
       let queryString = "call getDiagnosticoForId(?)";
       let query = connection.query(queryString, [ID], (err, result)=>{
         if(err){

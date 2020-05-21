@@ -906,8 +906,6 @@ module.exports = {
           console.log(diagnosticost);
           for (let i = 0; i < diagnosticost.length; i++) {
             this.getDiagnosticoConTratamientosById(diagnosticost[i]["Id Diagnostico"]).then((result)=>{
-              let diagnosticoString = diagnosticost[i]["Diagnostico"]
-              diagnosticost[i] = diagnosticoString;
               if(result.status=='OK'){
                 diagnosticost[i] = result.data;
                 this.getExamenesByDiagnostico(diagnosticost[i].diagnostico["idDiagnostico"]).then((result)=>{
@@ -930,7 +928,11 @@ module.exports = {
                   reject(err);
                 });
               }else{
-              //  console.log("HERE");
+                let diagnosticoString = diagnosticost[i]["Diagnostico"]
+                diagnosticost[i] = { idDiagnostico : diagnosticost[i]["Id Diagnostico"],
+                 diagnostico : diagnosticoString,
+                 idCitaMedica : ID
+                };
                 if(i == diagnosticost.length - 1) {
                   resolve({
                     status : 'OK',

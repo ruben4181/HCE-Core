@@ -800,7 +800,7 @@ module.exports = {
         console.log("tratamientos ", ID, "cc", result);
         if(result.status=='OK'){
           let diagnosticot = result.data;
-          let idDiagnostico = idDiagnostico;
+          let idDiagnostico = diagnosticot.idDiagnostico;
           this.getTratamientoByIdDiagnostico(idDiagnostico).then((result)=>{
             if(result.status=='OK'){
 

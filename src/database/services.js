@@ -576,8 +576,8 @@ module.exports = {
           reject(err);
         } else{
           console.log(result[0]);
-          queryStatus = result[0][0];
-          if(queryStatus['NO EXISTE EL DIAGNOSTICO']==undefined){
+          queryStatus = result[0];
+          if(queryStatus.idDiagnostico!=undefined){
               return resolve({
                 status : 'OK',
                 data : result[0]

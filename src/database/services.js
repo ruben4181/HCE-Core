@@ -1186,6 +1186,9 @@ module.exports = {
             examenes = result[0];
             for(let i=0; i<examenes.length; i++){
               console.log(examenes);
+              if(examenes[0]["NO EXISTE LOS EXAMENES"]!=undefined){
+                return resolve({status : 'OK', data : []});
+              }
               let id = examenes[i]['Id Examen'];
               this.getExamenesById(id).then((res)=>{
                 if(res.status=='OK'){
